@@ -1,8 +1,14 @@
 #include <QCoreApplication>
 
+#include "types.h"
+#include "Provisioning.h"
+
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
+    QCoreApplication app(argc, argv);
 
-    return a.exec();
+    Provisioning prov;
+    prov.getProvisioning();
+
+    return app.exec();
 }
