@@ -10,13 +10,11 @@ int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
 
-    qDebug() << "Some info";
+    SmartLogger::initLogger();
+    INFO() << "test info";
 
-    SmartLogger logger;
-    logger.initLogger();
-
-    Provisioning prov;
-    prov.getProvisioning();
+    //Provisioning prov;
+    //prov.getProvisioning();
 
     return app.exec();
 }

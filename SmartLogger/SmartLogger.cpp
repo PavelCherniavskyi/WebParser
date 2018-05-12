@@ -1,34 +1,22 @@
 #include "SmartLogger.h"
 
 const QString logFilePath = "logFile.txt";
-QSharedPointer<QFile> m_logFile;
+QSharedPointer<QFile> SmartLogger::m_logFile;
+QSharedPointer<QTextStream> SmartLogger::stream;
+QTextStream SmartLogger::logOut;
+QTextStream SmartLogger::console(stdout);
 
 
-void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+SmartLogger::SmartLogger(const char *file, int line) : m_file(file), m_line(line)
 {
-    static QTextStream logOut(m_logFile.data());
-    static QTextStream console(stdout);
-    QString str;
-    QTextStream buffer(&str, QIODevice::ReadWrite);
-    buffer << QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz ");
+    stream.reset(new QTextStream(&buffer, QIODevice::ReadWrite));
+}
 
-    switch (type)
-    {
-    case QtInfoMsg:     buffer << "INF "; break;
-    case QtDebugMsg:    buffer << "DBG "; break;
-    case QtWarningMsg:  buffer << "WRN "; break;
-    case QtCriticalMsg: buffer << "CRT "; break;
-    case QtFatalMsg:    buffer << "FTL "; break;
-    }
-
-    buffer << QT_MESSAGELOG_FILE << ": ";
-    buffer << QT_MESSAGELOG_LINE << " ";
-
-    buffer << msg << endl;
-    buffer.flush();
-
-    logOut << str;
-    console << str;
+SmartLogger::~SmartLogger()
+{
+    (*stream.data()) << '\n';
+    logOut << buffer;
+    console << buffer;
     console.flush();
     logOut.flush();
 }
@@ -37,5 +25,29 @@ void SmartLogger::initLogger()
 {
     m_logFile.reset(new QFile(logFilePath));
     m_logFile.data()->open(QFile::Append | QFile::Text);
-    qInstallMessageHandler(messageHandler);
+    logOut.setDevice(m_logFile.data());
+}
+
+QTextStream* SmartLogger::linker(QString str)
+{
+    m_file.remove(0, m_file.lastIndexOf('/') + 1);
+    (*stream.data()) << QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz ");
+    (*stream.data()) << str;
+    (*stream.data()) << m_file << ":"<< m_line << " ";
+    return stream.data();
+}
+
+QTextStream* SmartLogger::info()
+{
+    return linker("INF ");
+}
+
+QTextStream* SmartLogger::warn()
+{
+    return linker("WARN ");
+}
+
+QTextStream* SmartLogger::error()
+{
+    return linker("ERROR ");
 }
