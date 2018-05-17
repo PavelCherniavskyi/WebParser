@@ -6,7 +6,7 @@ find_package(Qt5Core REQUIRED)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 set (CMAKE_CXX_STANDARD 11)
-add_compile_options(-pedantic -Werror -std=c++11)
+add_compile_options(-std=c++11)
 add_definitions(-DQT_MESSAGELOGCONTEXT) #do display debug line and file path when using qDebug().
 
 enable_testing()

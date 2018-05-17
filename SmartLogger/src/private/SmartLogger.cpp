@@ -35,7 +35,7 @@ void SmartLogger::initLogger(SmartLogger::LOGPATH logOption, QString logFilePath
 
     if(m_logPath == LOGPATH::LogToFile || m_logPath == LOGPATH::LogBoth) {
         m_logFile.reset(new QFile(logFilePath));
-        if(m_logFile.data()->open(QFile::WriteOnly)) {
+        if(m_logFile.data()->open(QFile::WriteOnly | QIODevice::Truncate)) {
             m_logOut.setDevice(m_logFile.data());
         } else {
             m_console << QString("ERROR! Can't open file for loggin.");

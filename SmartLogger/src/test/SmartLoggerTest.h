@@ -1,4 +1,7 @@
 #include "../SmartLogger.h"
+#include <QTest>
+#include <iostream>
+#include <unistd.h>
 
 /*
   TODO:
@@ -7,14 +10,13 @@
   2. Implement logToBothTest.
 */
 
-class SmartLoggerTest
+class SmartLoggerTest : public QObject
 {
-public:
-    int run();
-private:
+    Q_OBJECT
+private slots:
     void initTestCase();
-    int logToFileTest();
-    //int logToStdOutTest();
-    //int logToBothTest();
+    void logToFileTest();
+    void logToStdOutTest();
+    void logToBothTest();
     void cleanupTestCase();
 };

@@ -1,36 +1,17 @@
 #include "SmartLoggerTest.h"
-#include <QDir>
-#include <QProcess>
 
 const QString infoStr("Info test string.");
 const QString warnStr("Warn test string.");
 const QString errorStr("Error test string.");
-
-int main()
-{
-    SmartLoggerTest test;
-    return test.run();
-}
-
-int SmartLoggerTest::run()
-{
-    int result;
-
-    initTestCase();
-    result = logToFileTest();
-    cleanupTestCase();
-
-    return result;
-}
 
 void SmartLoggerTest::initTestCase()
 {
 
 }
 
-int SmartLoggerTest::logToFileTest()
+void SmartLoggerTest::logToFileTest()
 {
-    QString filePath(QDir::currentPath() + "/test_log.txt");
+    QString filePath("test_log.txt");
     SmartLogger::initLogger(SmartLogger::LOGPATH::LogToFile, filePath);
 
     INFO() << infoStr;
@@ -39,10 +20,7 @@ int SmartLoggerTest::logToFileTest()
 
     QFile file(filePath);
 
-    if(!file.open(QIODevice::ReadOnly)) {
-        qDebug() << "Can't open file.";
-        return 1;
-    }
+    QVERIFY(file.open(QIODevice::ReadOnly | QIODevice::Truncate));
 
     int result = 3;
     QTextStream stream(&file);
@@ -58,7 +36,49 @@ int SmartLoggerTest::logToFileTest()
     }
 
     file.close();
-    return result;
+
+    QCOMPARE(result, 0);
+}
+
+void SmartLoggerTest::logToStdOutTest()
+{
+    SmartLogger::initLogger(SmartLogger::LOGPATH::LogToStdOut);
+    QFile fileOut("test_file.txt");
+
+    QVERIFY(fileOut.open(QIODevice::ReadWrite | QIODevice::Truncate));
+
+    int hdl = fileOut.handle();
+    dup2(hdl, 1);
+
+    INFO() << infoStr;
+    WARN() << warnStr;
+    ERROR() << errorStr;
+
+    fileOut.seek(0);
+
+    int result = 3;
+    QTextStream stream(&fileOut);
+    QString line = stream.readLine();
+    while (!line.isNull()) {
+       if(line.contains(infoStr))
+           --result;
+       else if(line.contains(warnStr))
+           --result;
+       else if(line.contains(errorStr))
+           --result;
+       line = stream.readLine();
+    }
+
+    //dup2(stdout, hdl);
+    fileOut.close();
+    close(hdl);
+
+    QCOMPARE(result, 0);
+}
+
+void SmartLoggerTest::logToBothTest()
+{
+
 }
 
 void SmartLoggerTest::cleanupTestCase()
