@@ -1,7 +1,6 @@
 #include <QCoreApplication>
 
 #include "types.h"
-#include "Provisioning.h"
 #include "SmartLogger/src/SmartLogger.h"
 
 

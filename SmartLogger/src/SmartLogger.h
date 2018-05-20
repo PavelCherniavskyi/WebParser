@@ -1,3 +1,5 @@
+#pragma once
+
 #include <QFile>
 #include <QScopedPointer>
 #include <QTextStream>
@@ -16,9 +18,6 @@
 #define WARN *(SmartLogger(__FILE__, __LINE__).warn)
 #define ERROR *(SmartLogger(__FILE__, __LINE__).error)
 
-/*
-  TODO:
-*/
 class SmartLogger
 {
 public:

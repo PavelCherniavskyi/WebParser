@@ -7,14 +7,13 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 set (CMAKE_CXX_STANDARD 11)
 add_compile_options(-std=c++11)
-add_definitions(-DQT_MESSAGELOGCONTEXT) #do display debug line and file path when using qDebug().
 
 enable_testing()
 
 add_executable(${PROJECT_NAME} "main.cpp" "types.h")
 
+add_subdirectory(SmartLogger)
 add_subdirectory(Provisioning)
 add_subdirectory(Http)
-add_subdirectory(SmartLogger)
 
 target_link_libraries(${PROJECT_NAME} Qt5::Core Provisioning Http SmartLogger)

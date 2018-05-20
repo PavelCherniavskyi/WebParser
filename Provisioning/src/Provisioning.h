@@ -1,5 +1,7 @@
 #pragma once
 
+#include "SmartLogger.h"
+
 #include <QObject>
 #include <QVector>
 #include <QtXml>
