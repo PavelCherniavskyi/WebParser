@@ -48,6 +48,7 @@ void SmartLoggerTest::logToStdOutTest()
     QVERIFY(fileOut.open(QIODevice::ReadWrite | QIODevice::Truncate));
 
     int hdl = fileOut.handle();
+    int saved_stdout = dup(1);
     dup2(hdl, 1);
 
     INFO() << infoStr;
@@ -69,16 +70,11 @@ void SmartLoggerTest::logToStdOutTest()
        line = stream.readLine();
     }
 
-    //dup2(stdout, hdl);
+    dup2(saved_stdout, 1);
+    close(saved_stdout);
     fileOut.close();
-    close(hdl);
 
     QCOMPARE(result, 0);
-}
-
-void SmartLoggerTest::logToBothTest()
-{
-
 }
 
 void SmartLoggerTest::cleanupTestCase()
