@@ -12,16 +12,18 @@ class Provisioning : public QObject
 public:
     enum class ProvTypes
     {
-        HTTP
+        HTTP,
+        SMART_LOGGER
     };
 
-    Provisioning(QObject * obj = 0): QObject(obj) {}
+    Provisioning(QObject * obj = 0);
     bool getProvisioning();
 
-    void registerForProvisionig(ProvTypes type){}
+signals:
+    void onSmartLoggerDataRecieved(SmartLogger::ProvData provData);
 
 private:
 
-    QVector<ProvTypes> m_registeredList;
+
 
 };

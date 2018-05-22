@@ -10,7 +10,13 @@ add_compile_options(-std=c++11)
 
 enable_testing()
 
-add_executable(${PROJECT_NAME} "main.cpp" "types.h" "ProvData.xml")
+add_executable(${PROJECT_NAME}
+    main.cpp
+    types.h
+    ProvData.xml
+    WebParser.cpp
+    WebParser.h
+)
 
 add_subdirectory(SmartLogger)
 add_subdirectory(Provisioning)

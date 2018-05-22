@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<provdata>
+    <http>
+        <url>http://dumskaya.net/</url>
+        <timeout>5</timeout>
+        <method>GET</method>
+    </http>
+    <smartlogger>
+        <logtofile>false</logtofile>
+        <logtostdout>true</logtostdout>
+        <filePath>logFile.txt</filePath>
+    </smartlogger>
+</provdata>

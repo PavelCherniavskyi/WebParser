@@ -12,7 +12,7 @@ void SmartLoggerTest::initTestCase()
 void SmartLoggerTest::logToFileTest()
 {
     QString filePath("test_log.txt");
-    SmartLogger::initLogger(SmartLogger::LOGPATH::LogToFile, filePath);
+    SmartLogger::init(SmartLogger::LOGWAY::LogToFile, filePath);
 
     INFO() << infoStr;
     WARN() << warnStr;
@@ -42,7 +42,7 @@ void SmartLoggerTest::logToFileTest()
 
 void SmartLoggerTest::logToStdOutTest()
 {
-    SmartLogger::initLogger(SmartLogger::LOGPATH::LogToStdOut);
+    SmartLogger::init(SmartLogger::LOGWAY::LogToStdOut);
     QFile fileOut("test_file.txt");
 
     QVERIFY(fileOut.open(QIODevice::ReadWrite | QIODevice::Truncate));

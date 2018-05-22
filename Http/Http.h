@@ -6,6 +6,12 @@ class Http : public QObject
 {
     Q_OBJECT
 public:
+    struct ProvData {
+        QString url;
+        QString method;
+        qint16 timeout;
+    };
+
     Http() {}
 
 public slots:

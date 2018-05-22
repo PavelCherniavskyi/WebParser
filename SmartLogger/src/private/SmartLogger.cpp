@@ -4,7 +4,8 @@ QSharedPointer<QFile> SmartLogger::m_logFile;
 QSharedPointer<QTextStream> SmartLogger::stream;
 QTextStream SmartLogger::m_logOut;
 QTextStream SmartLogger::m_console(stdout);
-SmartLogger::LOGPATH SmartLogger::m_logPath;
+SmartLogger::LOGWAY SmartLogger::m_logWay           = SmartLogger::LOGWAY::LogToStdOut;
+QString SmartLogger::m_logFilePath                  = "log_file.txt";
 
 
 SmartLogger::SmartLogger(const char *file, int line) : m_file(file), m_line(line)
@@ -15,10 +16,10 @@ SmartLogger::SmartLogger(const char *file, int line) : m_file(file), m_line(line
 SmartLogger::~SmartLogger()
 {
     (*stream.data()) << '\n';
-    if(m_logPath == LOGPATH::LogToFile) {
+    if(m_logWay == LOGWAY::LogToFile) {
         m_logOut << m_buffer;
         m_logOut.flush();
-    } else if(m_logPath == LOGPATH::LogToStdOut) {
+    } else if(m_logWay == LOGWAY::LogToStdOut) {
         m_console << m_buffer;
         m_console.flush();
     } else {
@@ -29,12 +30,22 @@ SmartLogger::~SmartLogger()
     }
 }
 
-void SmartLogger::initLogger(SmartLogger::LOGPATH logOption, QString logFilePath)
+void SmartLogger::init(Provisioning *prov)
 {
-    m_logPath = logOption;
+    connect(prov, &Provisioning::onSmartLoggerDataRecieved, this, &SmartLogger::OnProvDataReceived);
+}
 
-    if(m_logPath == LOGPATH::LogToFile || m_logPath == LOGPATH::LogBoth) {
-        m_logFile.reset(new QFile(logFilePath));
+void SmartLogger::OnProvDataReceived(SmartLogger::ProvData provData)
+{
+    if(provData.logWay != LOGWAY::NONE) {
+        m_logWay = provData.logWay;
+    }
+    if(!provData.logFilePath.isEmpty()) {
+        m_logFilePath = provData.logFilePath;
+    }
+
+    if(m_logWay == LOGWAY::LogToFile || m_logWay == LOGWAY::LogBoth) {
+        m_logFile.reset(new QFile(m_logFilePath));
         if(m_logFile.data()->open(QFile::WriteOnly | QIODevice::Truncate)) {
             m_logOut.setDevice(m_logFile.data());
         } else {

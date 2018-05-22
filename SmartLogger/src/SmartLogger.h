@@ -1,10 +1,11 @@
 #pragma once
 
 #include <QFile>
-#include <QScopedPointer>
+#include <QObject>
 #include <QTextStream>
 #include <QDateTime>
 #include <QLoggingCategory>
+#include "Provisioning.h"
 
 /*
    Usage:
@@ -18,20 +19,31 @@
 #define WARN *(SmartLogger(__FILE__, __LINE__).warn)
 #define ERROR *(SmartLogger(__FILE__, __LINE__).error)
 
-class SmartLogger
+class SmartLogger : public QObject
 {
+    Q_OBJECT
 public:
-    enum class LOGPATH {
+    enum class LOGWAY {
         LogToFile,
         LogToStdOut,
-        LogBoth
+        LogBoth,
+        NONE
+    };
+    struct ProvData
+    {
+        LOGWAY logWay;
+        QString logFilePath;
     };
     SmartLogger(const char *file, int line);
     ~SmartLogger();
     QTextStream* info();
     QTextStream* warn();
     QTextStream* error();
-    static void initLogger(LOGPATH logOption = SmartLogger::LOGPATH::LogBoth, QString logFilePath = QString("logFile.txt"));
+    static void init(Provisioning* prov);
+
+private slots:
+    void OnProvDataReceived(ProvData provData);
+
 
 private:
     QTextStream *linker(QString str);
@@ -40,7 +52,8 @@ private:
     static QSharedPointer<QFile> m_logFile;
     static QTextStream m_logOut;
     static QTextStream m_console;
-    static LOGPATH m_logPath;
+    static LOGWAY m_logWay;
+    static QString m_logFilePath;
     QString m_buffer;
     QString m_file;
     qint16 m_line;

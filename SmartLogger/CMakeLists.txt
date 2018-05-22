@@ -11,7 +11,7 @@ set(SOURCE
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE})
 
-target_link_libraries(${PROJECT_NAME} Qt5::Core)
+target_link_libraries(${PROJECT_NAME} Qt5::Core Provisioning)
 target_include_directories(${PROJECT_NAME} INTERFACE src/)
 
 #Tests =================

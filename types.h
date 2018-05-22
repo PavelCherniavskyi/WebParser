@@ -1,6 +1,6 @@
 #pragma once
 
 #include <QObject>
-#include "Provisioning/src/Provisioning.h"
+#include "SmartLogger.h"
 
-Q_DECLARE_METATYPE(Provisioning::ProvTypes)
+Q_DECLARE_METATYPE(SmartLogger::provData)

@@ -3,29 +3,46 @@
 #include <QXmlQuery>
 #include <QDebug>
 
+Provisioning::Provisioning(QObject *obj) : QObject(obj)
+{
+
+}
+
 bool Provisioning::getProvisioning()
 {
     QString strListRes;
-    QFile provData("../WebParser/Provisioning/provData.xml");
+    QFile provData("../WebParser/ProvData.xml");
     if(provData.open(QIODevice::ReadOnly)) {
-        INFO() << "Opened file susseccfully";
+        qDebug() << "Opened file susseccfully";
 
         QXmlQuery query;
         query.setFocus(&provData);
-        query.setQuery("params/Http/none/text()");
+
+
+
+
+        query.setQuery("provdata/http/url/text()");
         if (!query.isValid())
-            WARN() << "Incorrect query!";
+            qDebug() << "Incorrect query!";
 
         if(!query.evaluateTo(&strListRes)) {
-            WARN() << "Can't evaluate to string!";
+            qDebug() << "Can't evaluate to string!";
+        }
+
+        query.setQuery("provdata/http/method/text()");
+        if (!query.isValid())
+            qDebug() << "Incorrect query!";
+
+        if(!query.evaluateTo(&strListRes)) {
+            qDebug() << "Can't evaluate to string!";
         }
 
         provData.close();
 
-        INFO() << strListRes.remove(strListRes.size() - 1, 1);
+        qDebug() << strListRes.remove(strListRes.size() - 1, 1);
 
     } else {
-        WARN() << "Can't open provData.xml";
+        qDebug() << "Can't open provData.xml";
     }
 
 
