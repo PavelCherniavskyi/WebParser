@@ -2,8 +2,8 @@
 
 #include <QObject>
 #include <QCoreApplication>
+#include <QSharedPointer>
 
-#include "types.h"
 #include "SmartLogger.h"
 #include "Http.h"
 #include "Provisioning.h"
@@ -16,5 +16,4 @@ public:
 
 private:
     QSharedPointer<Provisioning> provisioning;
-
 };

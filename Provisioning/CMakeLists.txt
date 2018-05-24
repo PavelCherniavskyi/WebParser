@@ -12,5 +12,5 @@ set(SOURCE
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE})
 
-target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Xml Qt5::XmlPatterns SmartLogger)
+target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Xml Qt5::XmlPatterns)
 target_include_directories(${PROJECT_NAME} INTERFACE src/)

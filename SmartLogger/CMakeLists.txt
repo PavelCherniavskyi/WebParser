@@ -11,7 +11,7 @@ set(SOURCE
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE})
 
-target_link_libraries(${PROJECT_NAME} Qt5::Core Provisioning)
+target_link_libraries(${PROJECT_NAME} Qt5::Core)
 target_include_directories(${PROJECT_NAME} INTERFACE src/)
 
 #Tests =================
@@ -22,5 +22,5 @@ set(TEST_SOURCE
 )
 
 add_executable(logger_test ${TEST_SOURCE})
-target_link_libraries(logger_test ${PROJECT_NAME} Qt5::Test Qt5::Core)
+target_link_libraries(logger_test SmartLogger Qt5::Test Qt5::Core)
 add_test(NAME logger_test COMMAND logger_test)

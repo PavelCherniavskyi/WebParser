@@ -5,7 +5,8 @@
 #include <QTextStream>
 #include <QDateTime>
 #include <QLoggingCategory>
-#include "Provisioning.h"
+
+class Provisioning;
 
 /*
    Usage:
@@ -41,8 +42,8 @@ public:
     QTextStream* error();
     static void init(Provisioning* prov);
 
-private slots:
-    void OnProvDataReceived(ProvData provData);
+public slots:
+    static void OnProvDataReceived(SmartLogger::ProvData provData);
 
 
 private:

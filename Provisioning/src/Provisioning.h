@@ -1,10 +1,10 @@
 #pragma once
 
-#include "SmartLogger.h"
-
 #include <QObject>
 #include <QVector>
-#include <QtXml>
+
+#include "../../Http/src/Http.h"
+#include "../../SmartLogger/src/SmartLogger.h"
 
 class Provisioning : public QObject
 {
@@ -21,6 +21,8 @@ public:
 
 signals:
     void onSmartLoggerDataRecieved(SmartLogger::ProvData provData);
+    void onHttpDataRecieved(Http::ProvData provData);
+
 
 private:
 

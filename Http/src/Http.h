@@ -2,6 +2,8 @@
 
 #include <QObject>
 
+class Provisioning;
+
 class Http : public QObject
 {
     Q_OBJECT
@@ -12,12 +14,13 @@ public:
         qint16 timeout;
     };
 
-    Http() {}
+    Http(QObject *obj) : QObject(obj) {}
+    static void init(Provisioning* prov);
 
-public slots:
-    void onProvisioningChanged(){}
+private slots:
+    static void OnProvDataReceived(Http::ProvData provData);
 
 private:
-    bool isProvisioning {false};
+
 
 };

@@ -1,4 +1,3 @@
-#include "../SmartLogger.h"
 #include <QTest>
 #include <iostream>
 #include <unistd.h>

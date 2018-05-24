@@ -1,4 +1,5 @@
 #include "../SmartLogger.h"
+#include "../Provisioning/src/Provisioning.h"
 
 QSharedPointer<QFile> SmartLogger::m_logFile;
 QSharedPointer<QTextStream> SmartLogger::stream;
@@ -32,7 +33,7 @@ SmartLogger::~SmartLogger()
 
 void SmartLogger::init(Provisioning *prov)
 {
-    connect(prov, &Provisioning::onSmartLoggerDataRecieved, this, &SmartLogger::OnProvDataReceived);
+    connect(prov, &Provisioning::onSmartLoggerDataRecieved, OnProvDataReceived);
 }
 
 void SmartLogger::OnProvDataReceived(SmartLogger::ProvData provData)

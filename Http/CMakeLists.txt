@@ -4,11 +4,11 @@ project(Http)
 find_package(Qt5Core REQUIRED)
 
 set(SOURCE
-        Http.cpp
-        Http.h
+        src/private/Http.cpp
+        src/Http.h
 )
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE})
 
 target_link_libraries(${PROJECT_NAME} Qt5::Core)
-target_include_directories(${PROJECT_NAME} INTERFACE .)
+target_include_directories(${PROJECT_NAME} INTERFACE src/)
