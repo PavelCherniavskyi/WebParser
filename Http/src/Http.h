@@ -11,7 +11,7 @@ public:
     struct ProvData {
         QString url;
         QString method;
-        qint16 timeout;
+        quint16 timeout;
     };
 
     Http(QObject *obj) : QObject(obj) {}

@@ -22,5 +22,5 @@ set(TEST_SOURCE
 )
 
 add_executable(logger_test ${TEST_SOURCE})
-target_link_libraries(logger_test SmartLogger Qt5::Test Qt5::Core)
+target_link_libraries(logger_test Qt5::Test Qt5::Core SmartLogger Provisioning)
 add_test(NAME logger_test COMMAND logger_test)

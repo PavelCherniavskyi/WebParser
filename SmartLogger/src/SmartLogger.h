@@ -24,12 +24,13 @@ class SmartLogger : public QObject
 {
     Q_OBJECT
 public:
-    enum class LOGWAY {
+    enum LOGWAY {
         LogToFile,
         LogToStdOut,
         LogBoth,
         NONE
     };
+    Q_ENUM(LOGWAY)
     struct ProvData
     {
         LOGWAY logWay;
