@@ -1,5 +1,3 @@
-#include <QMetaEnum>
-
 #include "../SmartLogger.h"
 #include "../Provisioning/src/Provisioning.h"
 
@@ -40,8 +38,7 @@ void SmartLogger::init(Provisioning *prov)
 
 void SmartLogger::OnProvDataReceived(SmartLogger::ProvData provData)
 {
-    //QMetaEnum metaEnum = QMetaEnum::fromType<SmartLogger::ProvData>();
-    //INFO() << "Provisionig received: " << provData.logFilePath << " " << metaEnum.valueToKey(provData.logWay);
+    INFO() << "Provisionig received: " << provData.logFilePath << " " << LogWayToQStr(provData.logWay);
 
     if(provData.logWay != LOGWAY::NONE) {
         m_logWay = provData.logWay;

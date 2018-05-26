@@ -17,7 +17,7 @@ public:
     };
 
     Provisioning(QObject * obj = 0);
-    bool getProvisioning();
+    bool getProvisioning(QString path = "");
 
 signals:
     void onSmartLoggerDataRecieved(SmartLogger::ProvData provData);

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<provdata>
+    <http>
+        <url>https://test.com</url>
+        <timeout>99</timeout>
+        <method>POST</method>
+    </http>
+</provdata>

@@ -5,6 +5,7 @@
 #include <QTextStream>
 #include <QDateTime>
 #include <QLoggingCategory>
+#include <QMetaEnum>
 
 class Provisioning;
 
@@ -60,3 +61,9 @@ private:
     QString m_file;
     qint16 m_line;
 };
+
+template<typename QEnum>
+QString LogWayToQStr(const QEnum value)
+{
+    return QString(QMetaEnum::fromType<QEnum>().valueToKey(value));
+}

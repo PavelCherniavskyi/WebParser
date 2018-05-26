@@ -4,19 +4,21 @@
 
 #include "../Provisioning.h"
 
+const QString provDataPathDefault = "../WebParser/ProvData.xml";
+
 Provisioning::Provisioning(QObject *obj) : QObject(obj)
 {
 
 }
 
-bool Provisioning::getProvisioning()
+bool Provisioning::getProvisioning(QString path)
 {
+    if (path.isEmpty()) {
+        path = provDataPathDefault;
+    }
 
-
-    QFile provData("../WebParser/ProvData.xml");
+    QFile provData(path);
     if(provData.open(QIODevice::ReadOnly)) {
-        qDebug() << "Opened file susseccfully";
-
         QXmlQuery query;
         query.setFocus(&provData);
 
@@ -63,7 +65,8 @@ bool Provisioning::getProvisioning()
         emit onSmartLoggerDataRecieved(smartProvData);
 
     } else {
-        qDebug() << "Can't open provData.xml";
+        WARN() << "Can't open provData.xml";
+        return false;
     }
 
     return true;
