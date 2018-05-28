@@ -11,8 +11,10 @@ void WebParser::init()
 {
     registerMetatypes();
     provisioning = QSharedPointer<Provisioning>(new Provisioning(this));
+    http = QSharedPointer<Http>(new Http(this));
+
     SmartLogger::init(provisioning.data());
-    Http::init(provisioning.data());
+    http.data()->init(provisioning.data());
 
 
     provisioning.data()->getProvisioning();

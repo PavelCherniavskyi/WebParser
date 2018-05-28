@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+#include "LibCurlConfig.h"
 
 class Provisioning;
 
@@ -15,12 +16,13 @@ public:
     };
 
     Http(QObject *obj) : QObject(obj) {}
-    static void init(Provisioning* prov);
+    ~Http();
+    void init(Provisioning* prov);
 
 private slots:
-    static void OnProvDataReceived(Http::ProvData provData);
+    void OnProvDataReceived(Http::ProvData provData);
 
 private:
-
+    LibCurlConfig mLibCurlConfig;
 
 };

@@ -2,13 +2,16 @@ cmake_minimum_required(VERSION 2.8.12)
 
 project(Http)
 find_package(Qt5Core REQUIRED)
+#find_package(curl REQUIRED)
 
 set(SOURCE
         src/private/Http.cpp
+        src/private/LibCurlConfig.cpp
         src/Http.h
+        src/LibCurlConfig.h
 )
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE})
 
-target_link_libraries(${PROJECT_NAME} Qt5::Core)
+target_link_libraries(${PROJECT_NAME} Qt5::Core curl)
 target_include_directories(${PROJECT_NAME} INTERFACE src/)

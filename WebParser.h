@@ -16,4 +16,5 @@ public:
 
 private:
     QSharedPointer<Provisioning> provisioning;
+    QSharedPointer<Http> http;
 };
