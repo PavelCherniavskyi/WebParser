@@ -38,7 +38,7 @@ void SmartLogger::init(Provisioning *prov)
 
 void SmartLogger::OnProvDataReceived(SmartLogger::ProvData provData)
 {
-    INFO() << "Provisionig received: " << provData.logFilePath << " " << LogWayToQStr(provData.logWay);
+    INFO() << "Provisionig received: " << LogWayToQStr(provData.logWay);
 
     if(provData.logWay != LOGWAY::NONE) {
         m_logWay = provData.logWay;

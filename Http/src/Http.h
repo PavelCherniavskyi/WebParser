@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include "LibCurlConfig.h"
+#include "private/LibCurlConfig.h"
 
 class Provisioning;
 
@@ -10,9 +10,8 @@ class Http : public QObject
     Q_OBJECT
 public:
     struct ProvData {
-        QString url;
-        QString method;
-        quint16 timeout;
+        QList<QString> urls;
+        uint timeout;
     };
 
     Http(QObject *obj) : QObject(obj) {}
@@ -24,5 +23,5 @@ private slots:
 
 private:
     LibCurlConfig mLibCurlConfig;
-
+    ProvData mProvData;
 };

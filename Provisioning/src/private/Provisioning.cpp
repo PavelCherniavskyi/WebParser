@@ -1,4 +1,5 @@
 #include <QXmlQuery>
+#include <QXmlStreamReader>
 #include <QtXml>
 #include <QDebug>
 
@@ -19,20 +20,40 @@ bool Provisioning::getProvisioning(QString path)
 
     QFile provData(path);
     if(provData.open(QIODevice::ReadOnly)) {
-        QXmlQuery query;
-        query.setFocus(&provData);
 
         //Provisioning for Http
         Http::ProvData httpProvData;
-        query.setQuery("provdata/http/url/text()");
-        query.evaluateTo(&httpProvData.url);
-        httpProvData.url.remove(httpProvData.url.size() - 1, 1); //to cut '\n' at the end.
+        QXmlStreamReader xml(&provData);
+        QList<QString> urls;
+        while (!xml.atEnd() && !xml.hasError()) //parsing urls in cycle
+        {
+            if (xml.isStartElement())
+            {
+                if(xml.name() == "urls") {
+                    xml.readNext();
+                    while (xml.name() != "urls")
+                    {
+                        if(xml.isStartElement()) {
+                            urls.push_back(xml.readElementText());
+                        }
+                        xml.readNext();
+                    }
+                }
+            }
+            xml.readNext();
+        }
+        if (xml.hasError()) {
+            WARN() << "XML reader error: " << xml.errorString()
+                   << "Line:" << static_cast<int>(xml.lineNumber())
+                   << "Column:" << static_cast<int>(xml.columnNumber());
+            return false;
+        }
+        httpProvData.urls = urls;
+        provData.seek(0);
 
-        query.setQuery("provdata/http/method/text()");
-        query.evaluateTo(&httpProvData.method);
-        httpProvData.method.remove(httpProvData.method.size() - 1, 1);
-
-        query.setQuery("provdata/http/timeout/text()");
+        QXmlQuery query;
+        query.setFocus(&provData);
+        query.setQuery("provdata/http/settings/timeout/text()");
         QString temp;
         query.evaluateTo(&temp);
         httpProvData.timeout = static_cast<quint16>(temp.toInt());

@@ -7,7 +7,7 @@
  */
 
 #include "curl/curl.h"
-#include "../LibCurlConfig.h"
+#include "LibCurlConfig.h"
 #include "../../../SmartLogger/src/SmartLogger.h"
 
 bool LibCurlConfig::initialysed = false;

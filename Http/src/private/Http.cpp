@@ -13,5 +13,6 @@ void Http::init(Provisioning *prov)
 
 void Http::OnProvDataReceived(Http::ProvData provData)
 {
-    INFO() << "Provisionig received: " << provData.method << provData.url << provData.timeout;
+    INFO() << "Urls received: " << provData.urls.size() << ". Timeout received: " << provData.timeout;
+    mProvData = provData;
 }

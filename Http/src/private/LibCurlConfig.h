@@ -6,7 +6,7 @@ public:
     LibCurlConfig();
     ~LibCurlConfig();
 
-    static void init();
+    void init();
 
 private:
     static bool initialysed;

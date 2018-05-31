@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <provdata>
     <http>
-        <url>http://dumskaya.net/</url>
-        <timeout>5</timeout>
-        <method>GET</method>
+        <settings>
+            <timeout>5</timeout>
+        </settings>
+        <urls>
+            <url>http://dumskaya.net/</url>
+            <url>http://odpublic.net/</url>
+            <url>https://www.tenet.ua/</url>
+        </urls>
     </http>
     <smartlogger>
         <logtofile>false</logtofile>

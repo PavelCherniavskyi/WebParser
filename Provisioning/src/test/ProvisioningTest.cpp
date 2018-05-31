@@ -11,9 +11,13 @@ void HttpMock::init(Provisioning *prov)
 
 void HttpMock::OnProvDataReceived(Http::ProvData provData)
 {
-    QCOMPARE(provData.method, "POST");
-    QCOMPARE(provData.url, "https://test.com");
-    QCOMPARE(provData.timeout, static_cast<qint16>(99));
+    QCOMPARE(provData.urls.size(), 3);
+    for(uint i = 0; i < provData.urls.size(); ++i) {
+        QString str("https://test.com");
+        str += QString::number(i);
+        QCOMPARE(provData.urls[i], str);
+    }
+    QCOMPARE(provData.timeout, 99);
 }
 
 void ProvisioningTest::initTestCase()

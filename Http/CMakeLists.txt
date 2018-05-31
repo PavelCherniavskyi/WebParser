@@ -2,13 +2,14 @@ cmake_minimum_required(VERSION 2.8.12)
 
 project(Http)
 find_package(Qt5Core REQUIRED)
-#find_package(curl REQUIRED)
 
 set(SOURCE
         src/private/Http.cpp
         src/private/LibCurlConfig.cpp
+        src/private/ProtocolSlave.cpp
+        src/private/LibCurlConfig.h
+        src/private/ProtocolSlave.h
         src/Http.h
-        src/LibCurlConfig.h
 )
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE})
