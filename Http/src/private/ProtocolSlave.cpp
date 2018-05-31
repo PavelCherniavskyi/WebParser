@@ -1,17 +1,9 @@
-/**
- *This file implements LibCurl EasyHandle handling
- *@file ProtocolSlave.cpp
- *@copyright (C) 2015 Harman Becker Automotive Systems GmbH
- *
- *@author Aleksandr Stankov <astankov@luxoft.com>
- */
-
 #include <QMap>
 #include "curl/curl.h"
 #include "ProtocolSlave.h"
 #include "../../../SmartLogger/src/SmartLogger.h"
 
-const uint32_t DEFAULT_OPERATION_TIMEOUT_MS = 120000;
+const uint32_t DEFAULT_OPERATION_TIMEOUT_MS = 60000;
 
 const QMap<CURLcode, QString> curlCodeToText = {
     {CURLE_OK,                       "CURLE_OK"                      },
@@ -121,21 +113,16 @@ ProtocolSlave::ProtocolSlave(const int32_t id)
 
     bool success = true;
 
-    // initialize header handling
     success &= (CURLE_OK == curl_easy_setopt(mEasyHandle, CURLOPT_HEADERFUNCTION, &responseHeaderDispatcherCallback));
     success &= (CURLE_OK == curl_easy_setopt(mEasyHandle, CURLOPT_WRITEHEADER, this));
 
-    // initialize handling of received data
     success &= (CURLE_OK == curl_easy_setopt(mEasyHandle, CURLOPT_WRITEFUNCTION, &writeDispatcherCallback));
     success &= (CURLE_OK == curl_easy_setopt(mEasyHandle, CURLOPT_WRITEDATA, this));
 
-    // initialize handling of debug information
     success &= (CURLE_OK == curl_easy_setopt(mEasyHandle, CURLOPT_DEBUGFUNCTION, &curlDebugDispatcherCallback));
     success &= (CURLE_OK == curl_easy_setopt(mEasyHandle, CURLOPT_DEBUGDATA, this));
 
-    // default configuration
     success &= (CURLE_OK == curl_easy_setopt(mEasyHandle, CURLOPT_TIMEOUT_MS, DEFAULT_OPERATION_TIMEOUT_MS));
-
 
     if (false == success) {
         WARN() << "[" << mId << "] Constructor: cannot init easy handle";

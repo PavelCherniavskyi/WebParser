@@ -7,8 +7,10 @@ set(SOURCE
         src/private/Http.cpp
         src/private/LibCurlConfig.cpp
         src/private/ProtocolSlave.cpp
+        src/private/ProcessorSlave.cpp
         src/private/LibCurlConfig.h
         src/private/ProtocolSlave.h
+        src/private/ProcessorSlave.h
         src/Http.h
 )
 

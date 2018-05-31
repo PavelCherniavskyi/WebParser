@@ -1,11 +1,3 @@
-/**
- * This file implements LibCurl EasyHandle handling
- * @file ProtocolSlave.h
- * @copyright (C) 2015 Harman Becker Automotive Systems GmbH
- *
- * @author Aleksandr Stankov  <astankov@luxoft.com>
- */
-
 #pragma once
 
 #include <QObject>
