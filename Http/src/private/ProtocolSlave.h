@@ -13,7 +13,7 @@ public:
     ~ProtocolSlave();
     int32_t     id() const;
     void        processExecutionResult(const CURLcode executionResult);
-    void        setParams(const std::string &url, const QByteArray  &data);
+    void        setParams(const QString &url, const QByteArray  &data);
     void        setVerboseLogging(const bool activate);
     bool        active() const;
     void        setActive(bool active);

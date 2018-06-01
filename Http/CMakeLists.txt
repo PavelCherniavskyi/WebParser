@@ -8,9 +8,19 @@ set(SOURCE
         src/private/LibCurlConfig.cpp
         src/private/ProtocolSlave.cpp
         src/private/ProcessorSlave.cpp
+        src/private/ProcessorExecutor.cpp
+        src/private/ProcessorMaster.cpp
+        src/private/ProtocolMaster.cpp
+        src/private/JobExecutor.cpp
+        src/private/HttpJob.cpp
         src/private/LibCurlConfig.h
         src/private/ProtocolSlave.h
         src/private/ProcessorSlave.h
+        src/private/ProcessorExecutor.h
+        src/private/ProcessorMaster.h
+        src/private/ProtocolMaster.h
+        src/private/HttpJob.h
+        src/private/JobExecutor.h
         src/Http.h
 )
 

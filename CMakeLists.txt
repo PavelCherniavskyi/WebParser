@@ -16,6 +16,7 @@ add_executable(${PROJECT_NAME}
     ProvData.xml
     WebParser.cpp
     WebParser.h
+    IRequestSender.h
 )
 
 add_subdirectory(SmartLogger)

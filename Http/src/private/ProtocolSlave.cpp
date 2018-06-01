@@ -157,9 +157,9 @@ void ProtocolSlave::processExecutionResult(const CURLcode executionResult)
 }
 
 
-void ProtocolSlave::setParams(const std::string &url, const QByteArray &data)
+void ProtocolSlave::setParams(const QString &url, const QByteArray &data)
 {
-    if (CURLE_OK != curl_easy_setopt(mEasyHandle, CURLOPT_URL, url.c_str())) {
+    if (CURLE_OK != curl_easy_setopt(mEasyHandle, CURLOPT_URL, url.toStdString().c_str())) {
         WARN() << "[" << mId << "] Cannot set url";
     }
 
