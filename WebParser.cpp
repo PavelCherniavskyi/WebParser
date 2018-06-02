@@ -4,7 +4,12 @@
 
 WebParser::WebParser(int &argc, char **argv) : QCoreApplication(argc,argv)
 {
+    INFO();
+}
 
+WebParser::~WebParser()
+{
+    INFO();
 }
 
 void WebParser::init()
@@ -19,5 +24,15 @@ void WebParser::init()
 
     provisioning.data()->getProvisioning();
 
+    http->sendRequest(QSharedPointer<IRequestSender>(this), QString("http://dumskaya.net/"));
+}
 
+void WebParser::responseSendRequest(int32_t id)
+{
+    INFO() << "Webparser sends request: " << id;
+}
+
+void WebParser::informationProcessingFinishedValue(const ProcessingFinishedParams &value)
+{
+    INFO() << "Got finished value: " << value.id << " " << HttpErrorToText[value.error];
 }

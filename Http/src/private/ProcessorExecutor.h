@@ -33,7 +33,7 @@ public:
 
 signals:
     /*! sends event to execute job in worker thread */
-    void executeJob(const std::vector<ProcessorSlave *>& processorSlaves);
+    void executeJob(const QVector<ProcessorSlave *>& processorSlaves);
 
 public slots:
     /*! \brief adds processor to execution queue */

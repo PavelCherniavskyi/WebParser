@@ -23,6 +23,7 @@ set(SOURCE
         src/private/JobExecutor.h
         src/Http.h
         src/HttpEnums.h
+        src/HttpTypes.h
 )
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE})

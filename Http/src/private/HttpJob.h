@@ -21,7 +21,7 @@ public:
 signals:
     void continueExecution();
     void jobExecuted();
-    void executionCompleted(int32_t id);
+    void executionCompleted(qint32 id);
 
 public slots:
     void executeJob();

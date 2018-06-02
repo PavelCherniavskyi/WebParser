@@ -9,7 +9,10 @@ SmartLogger::LOGWAY SmartLogger::m_logWay           = SmartLogger::LOGWAY::LogTo
 QString SmartLogger::m_logFilePath                  = "log_file.txt";
 
 
-SmartLogger::SmartLogger(const char *file, int line) : m_file(file), m_line(line)
+SmartLogger::SmartLogger(const char *file, const char *function, int line)
+    : m_file(file)
+    , m_line(line)
+    , m_function(function)
 {
     stream.reset(new QTextStream(&m_buffer, QIODevice::ReadWrite));
 }
@@ -38,7 +41,7 @@ void SmartLogger::init(Provisioning *prov)
 
 void SmartLogger::OnProvDataReceived(SmartLogger::ProvData provData)
 {
-    INFO() << "Provisionig received: " << LogWayToQStr(provData.logWay);
+    INFO() << "Provisionig received: " << EnumToQStr(provData.logWay);
 
     if(provData.logWay != LOGWAY::NONE) {
         m_logWay = provData.logWay;
@@ -63,7 +66,7 @@ QTextStream* SmartLogger::linker(QString logTypeStr)
     m_file.remove(0, m_file.lastIndexOf('/') + 1); //we need name of the file only
     (*stream.data()) << QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz ");
     (*stream.data()) << logTypeStr;
-    (*stream.data()) << m_file << ":"<< m_line << " ";
+    (*stream.data()) << m_function << " "<< m_file << ":"<< m_line << " ";
     return stream.data();
 }
 

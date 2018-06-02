@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+#include <QBuffer>
 
 #include "curl/curl.h"
 
@@ -13,10 +14,11 @@ public:
     ~ProtocolSlave();
     int32_t     id() const;
     void        processExecutionResult(const CURLcode executionResult);
-    void        setParams(const QString &url, const QByteArray  &data);
+    void        setParams(const QString &url);
     void        setVerboseLogging(const bool activate);
     bool        active() const;
     void        setActive(bool active);
+    QByteArray  responseData() const;
     CURL*       easyHandle() const;
     CURLcode    result() const;
     uint16_t    httpResponseCode() const;
@@ -37,4 +39,5 @@ private:
     CURL*                    mEasyHandle;
     bool                     mActive;
     CURLcode                 mResult;
+    QBuffer                  mRxStream;
 };

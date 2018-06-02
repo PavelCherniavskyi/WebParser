@@ -17,9 +17,9 @@ class Provisioning;
    ERROR() << "error info";
 */
 
-#define INFO *(SmartLogger(__FILE__, __LINE__).info)
-#define WARN *(SmartLogger(__FILE__, __LINE__).warn)
-#define ERROR *(SmartLogger(__FILE__, __LINE__).error)
+#define INFO *(SmartLogger(__FILE__, __FUNCTION__, __LINE__).info)
+#define WARN *(SmartLogger(__FILE__, __FUNCTION__, __LINE__).warn)
+#define ERROR *(SmartLogger(__FILE__, __FUNCTION__, __LINE__).error)
 
 class SmartLogger : public QObject
 {
@@ -37,7 +37,7 @@ public:
         LOGWAY logWay;
         QString logFilePath;
     };
-    SmartLogger(const char *file, int line);
+    SmartLogger(const char *file, const char *function, int line);
     ~SmartLogger();
     QTextStream* info();
     QTextStream* warn();
@@ -60,10 +60,11 @@ private:
     QString m_buffer;
     QString m_file;
     qint16 m_line;
+    QString m_function;
 };
 
 template<typename QEnum>
-QString LogWayToQStr(const QEnum value)
+QString EnumToQStr(const QEnum value)
 {
     return QString(QMetaEnum::fromType<QEnum>().valueToKey(value));
 }

@@ -108,7 +108,10 @@ ProtocolSlave::ProtocolSlave(const int32_t id)
     , mEasyHandle(0)
     , mActive(false)
     , mResult(CURLE_OK)
+    , mRxStream()
 {
+    mRxStream.open(QBuffer::ReadWrite);
+
     mEasyHandle = curl_easy_init();
 
     bool success = true;
@@ -134,6 +137,7 @@ ProtocolSlave::ProtocolSlave(const int32_t id)
 ProtocolSlave::~ProtocolSlave()
 //--------------------------------------------------------------------------------------------------
 {
+    mRxStream.close();
 
     curl_easy_cleanup(mEasyHandle);
 
@@ -157,7 +161,7 @@ void ProtocolSlave::processExecutionResult(const CURLcode executionResult)
 }
 
 
-void ProtocolSlave::setParams(const QString &url, const QByteArray &data)
+void ProtocolSlave::setParams(const QString &url)
 {
     if (CURLE_OK != curl_easy_setopt(mEasyHandle, CURLOPT_URL, url.toStdString().c_str())) {
         WARN() << "[" << mId << "] Cannot set url";
@@ -184,16 +188,17 @@ bool ProtocolSlave::active() const
     return mActive;
 }
 
-//--------------------------------------------------------------------------------------------------
 void ProtocolSlave::setActive(bool active)
-//--------------------------------------------------------------------------------------------------
 {
     mActive = active;
 }
 
-//--------------------------------------------------------------------------------------------------
+QByteArray ProtocolSlave::responseData() const
+{
+    return mRxStream.buffer();
+}
+
 CURL *ProtocolSlave::easyHandle() const
-//--------------------------------------------------------------------------------------------------
 {
     return mEasyHandle;
 }
@@ -257,8 +262,9 @@ size_t ProtocolSlave::writeCallback(void *ptr, size_t size, size_t nmemb)
 {
     size_t bytes = size * nmemb;
 
-    //processData(QByteArray(static_cast<char *>(ptr), static_cast<int>(bytes)));
-    return 0;
+    QByteArray data(static_cast<char *>(ptr), static_cast<int>(bytes));
+    return static_cast<size_t>(mRxStream.write(data));
+
 }
 
 int ProtocolSlave::curlDebugDispatcherCallback(CURL *curl, curl_infotype infoType, char *text, size_t size, void *data)

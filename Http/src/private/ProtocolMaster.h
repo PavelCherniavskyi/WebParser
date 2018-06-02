@@ -3,9 +3,10 @@
 #include <QObject>
 #include <memory>
 #include <vector>
-
+#include <QSharedPointer>
 #include "ProtocolSlave.h"
 #include "../HttpEnums.h"
+#include "../HttpTypes.h"
 #include "../../../../WebParser/IRequestSender.h"
 
 class Http;
@@ -20,7 +21,7 @@ public:
     int32_t id() const;
     ProtocolSlave *slave();
     void abort();
-    bool sendRequest(const QString &url, const QByteArray  &data);
+    bool sendRequest(const QString &url);
 
 signals:
     void addProtocolToProcessing(ProtocolMaster *protocol);
@@ -31,7 +32,6 @@ public slots:
 
 private:
     ProtocolMaster();
-
     HttpError getErrorFromLibcurl();
 
     int32_t       mId;

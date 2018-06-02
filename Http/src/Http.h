@@ -22,10 +22,11 @@ public:
     Http(QObject *obj);
     ~Http();
     void init(Provisioning* prov);
-    void sendRequest(QSharedPointer<IRequestSender> sender, const QString& url, const QVector<uint8_t>& data);
+    void sendRequest(QSharedPointer<IRequestSender> sender, const QString& url);
 
 private slots:
     void OnProvDataReceived(Http::ProvData provData);
+    void protocolProcessingFinished(qint32 id);
 
 private:
     LibCurlConfig                               mLibCurlConfig;

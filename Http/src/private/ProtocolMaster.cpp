@@ -43,15 +43,15 @@ void ProtocolMaster::abort()
 }
 
 //--------------------------------------------------------------------------------------------------
-bool ProtocolMaster::sendRequest(const QString &url, const QByteArray  &data)
+bool ProtocolMaster::sendRequest(const QString &url)
 //--------------------------------------------------------------------------------------------------
 {
     bool success = false;
 
-    INFO() << "[" << mId << "] sendRequest(" << url << " " << data.size() << "bytes)";
+    INFO() << "[" << mId << "] sendRequest(" << url;
 
     if (!mProtocolSlave.active()) {
-        mProtocolSlave.setParams(url, data);
+        mProtocolSlave.setParams(url);
 
         emit addProtocolToProcessing(this);
         success = true;
@@ -111,18 +111,18 @@ void ProtocolMaster::jobExecuted()
     if (!mProtocolSlave.active()) {
         HttpError error = getErrorFromLibcurl();
 
-//        const QByteArray data = mProtocolSlave.responseData();
+        const QByteArray data = mProtocolSlave.responseData();
 
-        INFO() << "[" << mId << "] send informationResponseInfoValue( error = " << static_cast<int>(error) << ", " << "Empty" /*data.size()*/ << "bytes )";
+        INFO() << "[" << mId << "] send informationResponseInfoValue( error = " << static_cast<int>(error) << ", " << data.size() << "bytes )";
 
 //        mHttpService->informationResponseInfoValue(ResponseInfoParams(mId,
 //                                                                    mProtocolSlave.httpResponseCode(),
 //                                                                    mProtocolSlave.responseHeaders(),
 //                                                                    mProtocolSlave.cookies()));
 
-//        mHttpService->informationResponseDataValue(ResponseDataParams(mId, std::vector<uint8_t>(data.data(), data.data() + data.size())));
+//        mRequestSender->informationResponseDataValue(ResponseDataParams(mId, std::vector<uint8_t>(data.data(), data.data() + data.size())));
 
-//        mHttpService->informationProcessingFinishedValue(ProcessingFinishedParams(mId, getErrorFromLibcurl()));
+        mRequestSender->informationProcessingFinishedValue(ProcessingFinishedParams(mId, getErrorFromLibcurl()));
 
         emit removeProtocolFromProcessing(this);
     }
