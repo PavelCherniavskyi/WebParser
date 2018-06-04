@@ -17,22 +17,19 @@ void WebParser::init()
     registerMetatypes();
     provisioning = QSharedPointer<Provisioning>(new Provisioning(this));
     http = QSharedPointer<Http>(new Http(this));
+    downloadManager = QSharedPointer<DownloadManager>(new DownloadManager(this));
+    downloadManager->buildClients(http.data());
+
+    connect(downloadManager.data(), &DownloadManager::doneExecution, this, &WebParser::quit);
 
     SmartLogger::init(provisioning.data());
-    http.data()->init(provisioning.data());
+    http->init(provisioning.data());
+    downloadManager->init(provisioning.data());
 
-
-    provisioning.data()->getProvisioning();
-
-    http->sendRequest(QSharedPointer<IRequestSender>(this), QString("http://dumskaya.net/"));
+    provisioning->getProvisioning();
 }
 
-void WebParser::responseSendRequest(int32_t id)
+void WebParser::run()
 {
-    INFO() << "Webparser sends request: " << id;
-}
-
-void WebParser::informationProcessingFinishedValue(const ProcessingFinishedParams &value)
-{
-    INFO() << "Got finished value: " << value.id << " " << HttpErrorToText[value.error];
+    downloadManager->execute();
 }

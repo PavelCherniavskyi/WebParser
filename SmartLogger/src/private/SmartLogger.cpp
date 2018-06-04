@@ -64,9 +64,10 @@ void SmartLogger::OnProvDataReceived(SmartLogger::ProvData provData)
 QTextStream* SmartLogger::linker(QString logTypeStr)
 {
     m_file.remove(0, m_file.lastIndexOf('/') + 1); //we need name of the file only
+    m_file.remove(m_file.lastIndexOf('.'), m_file.size()); //we need name of the class only
     (*stream.data()) << QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz ");
     (*stream.data()) << logTypeStr;
-    (*stream.data()) << m_function << " "<< m_file << ":"<< m_line << " ";
+    (*stream.data()) << m_file << "::"<< m_function << "  ";
     return stream.data();
 }
 

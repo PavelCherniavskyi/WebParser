@@ -76,16 +76,6 @@ void ProcessorMaster::removeProtocolFromProcessing(ProtocolMaster *protocol)
 //--------------------------------------------------------------------------------------------------
 {
     if (protocol) {
-        ///@todo: maybe add assertion whether ProcessorExecutor is not active
-        ///       no workerthread run is currently active.
-
-        // The client of ProcessorMaster called the 'remove()' function
-        // while the ProcessorSlave is being executed within the workerthread.
-        // That is not allowed and must be prevented. The client is
-        // responsible to synchronize to the workerthread activity and call
-        // 'remove()' only when the workerthread is not running.
-        // ASSERT( false ); todo: enable again
-
         auto iter = std::find(mProtocolMasters.begin(), mProtocolMasters.end(), protocol);
 
         if (mProtocolMasters.end() != iter) {

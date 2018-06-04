@@ -9,7 +9,12 @@ const QString provDataPathDefault = "../WebParser/ProvData.xml";
 
 Provisioning::Provisioning(QObject *obj) : QObject(obj)
 {
+    INFO();
+}
 
+Provisioning::~Provisioning()
+{
+    INFO();
 }
 
 bool Provisioning::getProvisioning(QString path)
@@ -22,7 +27,7 @@ bool Provisioning::getProvisioning(QString path)
     if(provData.open(QIODevice::ReadOnly)) {
 
         //Provisioning for Http
-        Http::ProvData httpProvData;
+        DownloadManager::ProvData downloadProvData;
         QXmlStreamReader xml(&provData);
         QList<QString> urls;
         while (!xml.atEnd() && !xml.hasError()) //parsing urls in cycle
@@ -48,7 +53,7 @@ bool Provisioning::getProvisioning(QString path)
                    << "Column:" << static_cast<int>(xml.columnNumber());
             return false;
         }
-        httpProvData.urls = urls;
+        downloadProvData.urls = urls;
         provData.seek(0);
 
         QXmlQuery query;
@@ -56,7 +61,7 @@ bool Provisioning::getProvisioning(QString path)
         query.setQuery("provdata/http/settings/timeout/text()");
         QString temp;
         query.evaluateTo(&temp);
-        httpProvData.timeout = static_cast<quint16>(temp.toInt());
+        downloadProvData.timeout = static_cast<quint16>(temp.toInt());
 
         //Provisioning for SmartLogger
         SmartLogger::ProvData smartProvData;
@@ -82,7 +87,7 @@ bool Provisioning::getProvisioning(QString path)
 
         provData.close();
 
-        emit onHttpDataRecieved(httpProvData);
+        emit onDownloadMngrDataRecieved(downloadProvData);
         emit onSmartLoggerDataRecieved(smartProvData);
 
     } else {

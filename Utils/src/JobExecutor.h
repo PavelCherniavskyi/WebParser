@@ -9,7 +9,7 @@
 
 #include <QThread>
 
-class HttpJob;
+class Job;
 
 /*! \brief class JobExecutor controls execution of different Jobs which are derived from class Job.
 Usage example:
@@ -72,7 +72,7 @@ public:
     /*! \brief Executes job in the workerthread
         \param job Job to be executed
         \param printDebugInfo false if no need to print debug info*/
-    void execute(QSharedPointer<HttpJob> job, bool printDebugInfo = true);
+    void execute(QSharedPointer<Job> job, bool printDebugInfo = true);
 
 signals:
     /*! \brief Starts Job execution */
@@ -86,7 +86,7 @@ private:
     JobExecutor(const JobExecutor & rhs) = delete;              ///< no copy
     JobExecutor &operator=(const JobExecutor &rhs) = delete;    ///< no assignment
 
-    QList<QSharedPointer<HttpJob>>  mActiveJobs;
+    QList<QSharedPointer<Job>>      mActiveJobs;
     QThread                         mWorkerThread;
     int32_t                         mNewId;
     bool                            mPrintDebugInfo;

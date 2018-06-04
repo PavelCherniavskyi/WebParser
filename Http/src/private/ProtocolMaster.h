@@ -7,16 +7,16 @@
 #include "ProtocolSlave.h"
 #include "../HttpEnums.h"
 #include "../HttpTypes.h"
-#include "../../../../WebParser/IRequestSender.h"
 
 class Http;
+class DownloadManager;
 
 /*! \brief class ProtocolMaster handles Libcurl easyHandle (high-level) */
 class ProtocolMaster : public QObject
 {
     Q_OBJECT
 public:
-    explicit ProtocolMaster(QSharedPointer<IRequestSender> sender, int32_t id);
+    explicit ProtocolMaster(DownloadManager *sender, int32_t id);
     virtual ~ProtocolMaster();
     int32_t id() const;
     ProtocolSlave *slave();
@@ -37,7 +37,7 @@ private:
     int32_t       mId;
     ProtocolSlave mProtocolSlave;
 
-    QSharedPointer<IRequestSender> mRequestSender; // this is necessary for sending responses:
+    DownloadManager *mRequestSender; // this is necessary for sending responses:
 
     bool          mAbortRequested;
 };

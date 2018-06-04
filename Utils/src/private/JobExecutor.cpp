@@ -1,5 +1,5 @@
-#include "JobExecutor.h"
-#include "HttpJob.h"
+#include "../JobExecutor.h"
+#include "../Job.h"
 
 #include "../../../SmartLogger/src/SmartLogger.h"
 
@@ -30,7 +30,7 @@ JobExecutor::~JobExecutor()
 
 
 //--------------------------------------------------------------------------------------------------
-void JobExecutor::execute(QSharedPointer<HttpJob> job, bool printDebugInfo)
+void JobExecutor::execute(QSharedPointer<Job> job, bool printDebugInfo)
 //--------------------------------------------------------------------------------------------------
 {
     mPrintDebugInfo = printDebugInfo;
@@ -41,8 +41,8 @@ void JobExecutor::execute(QSharedPointer<HttpJob> job, bool printDebugInfo)
 
     job->setId(mNewId++);
 
-    connect(this,      &JobExecutor::executeJob, job.data(), &HttpJob::executeJob,                 Qt::QueuedConnection);
-    connect(job.data(), &HttpJob::executionCompleted, this,      &JobExecutor::executionCompleted, Qt::QueuedConnection);
+    connect(this, &JobExecutor::executeJob, job.data(), &Job::executeJob, Qt::QueuedConnection);
+    connect(job.data(), &Job::executionCompleted, this, &JobExecutor::executionCompleted, Qt::QueuedConnection);
 
     mActiveJobs.append(job);
 
@@ -55,14 +55,14 @@ void JobExecutor::execute(QSharedPointer<HttpJob> job, bool printDebugInfo)
     emit executeJob();
 
     // disconnect because we need to send signal to Job once
-    disconnect(this, &JobExecutor::executeJob, job.data(), &HttpJob::executeJob);
+    disconnect(this, &JobExecutor::executeJob, job.data(), &Job::executeJob);
 }
 
 //--------------------------------------------------------------------------------------------------
 void JobExecutor::executionCompleted(int32_t id)
 //--------------------------------------------------------------------------------------------------
 {
-    foreach(QSharedPointer<HttpJob> job, mActiveJobs) {
+    foreach(QSharedPointer<Job> job, mActiveJobs) {
         if (job->id() == id) {
             if(mPrintDebugInfo){
                 INFO() << "Job [" << id << "]: '" << job->name() << "' completed";

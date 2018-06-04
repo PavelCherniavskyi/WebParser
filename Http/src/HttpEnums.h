@@ -34,8 +34,3 @@ enum class HttpOption : char {
     LOCAL_PORT_RANGE,
     SSL_VERIFYSTATUS
 };
-
-enum class ResponseHandler : char {
-    AGGREGATE,
-    STREAM
-};

@@ -1,6 +1,5 @@
 #include "../Http.h"
 #include "../Provisioning/src/Provisioning.h"
-#include "../../../../WebParser/IRequestSender.h"
 
 Http::Http(QObject *obj) : QObject(obj)
   , mProcessorMaster()
@@ -20,36 +19,31 @@ Http::~Http()
 
 void Http::init(Provisioning *prov)
 {
+    (void*)prov; //for future
     mLibCurlConfig.init();
-    connect(prov, &Provisioning::onHttpDataRecieved, this, &Http::OnProvDataReceived);
 }
 
-void Http::sendRequest(QSharedPointer<IRequestSender> sender, const QString &url)
+void Http::sendRequest(DownloadManager *sender, const QString &url)
 {
-    INFO() << "sendRequest:";
+    if(sender == nullptr) {
+        ERROR() << "DownloadManager is Empty";
+    }
+
     INFO() << "url =" << url;
 
-    QSharedPointer<ProtocolMaster> protocol = QSharedPointer<ProtocolMaster>::create(sender, mProtocolIdGenerator);
+    QSharedPointer<ProtocolMaster> protocol = QSharedPointer<ProtocolMaster>::create(sender, mProtocolIdGenerator++);
 
     connect(protocol.data(), &ProtocolMaster::addProtocolToProcessing,       mProcessorMaster.data(), &ProcessorMaster::addProtocolToProcessing     );
     connect(protocol.data(), &ProtocolMaster::removeProtocolFromProcessing,  mProcessorMaster.data(), &ProcessorMaster::removeProtocolFromProcessing);
 
     mProtocolMasters.push_back(protocol);
 
-    sender->responseSendRequest(mProtocolIdGenerator++);
-
     protocol->sendRequest(url);
-}
-
-void Http::OnProvDataReceived(Http::ProvData provData)
-{
-    INFO() << "Urls received: " << provData.urls.size() << ". Timeout received: " << provData.timeout;
-    mProvData = provData;
 }
 
 void Http::protocolProcessingFinished(qint32 id)
 {
-    INFO();
+    INFO() << "Id: " << id;
     auto iter = std::find_if(mProtocolMasters.begin(), mProtocolMasters.end()
                              , [id](QSharedPointer<ProtocolMaster> proto)
                                {return proto->id() == id;});

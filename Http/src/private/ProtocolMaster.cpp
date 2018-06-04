@@ -1,13 +1,17 @@
 #include "ProtocolMaster.h"
 #include "../../../SmartLogger/src/SmartLogger.h"
+#include "../../../DownloadManager/src/DownloadManager.h"
 
-ProtocolMaster::ProtocolMaster(QSharedPointer<IRequestSender> sender, int32_t id)
+ProtocolMaster::ProtocolMaster(DownloadManager *sender, int32_t id)
     : mId(id)
     , mProtocolSlave(id)
     , mRequestSender(sender)
     , mAbortRequested(false)
 {
     INFO() << "[" << mId << "] constructor";
+    if(mRequestSender == nullptr) {
+        ERROR() << "Request sender is empty";
+    }
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -48,7 +52,7 @@ bool ProtocolMaster::sendRequest(const QString &url)
 {
     bool success = false;
 
-    INFO() << "[" << mId << "] sendRequest(" << url;
+    INFO() << "[" << mId << "] sendRequest: " << url;
 
     if (!mProtocolSlave.active()) {
         mProtocolSlave.setParams(url);
@@ -115,14 +119,7 @@ void ProtocolMaster::jobExecuted()
 
         INFO() << "[" << mId << "] send informationResponseInfoValue( error = " << static_cast<int>(error) << ", " << data.size() << "bytes )";
 
-//        mHttpService->informationResponseInfoValue(ResponseInfoParams(mId,
-//                                                                    mProtocolSlave.httpResponseCode(),
-//                                                                    mProtocolSlave.responseHeaders(),
-//                                                                    mProtocolSlave.cookies()));
-
-//        mRequestSender->informationResponseDataValue(ResponseDataParams(mId, std::vector<uint8_t>(data.data(), data.data() + data.size())));
-
-        mRequestSender->informationProcessingFinishedValue(ProcessingFinishedParams(mId, getErrorFromLibcurl()));
+        mRequestSender->setResponseData(ResponseDataParams(mId, data, getErrorFromLibcurl()));
 
         emit removeProtocolFromProcessing(this);
     }

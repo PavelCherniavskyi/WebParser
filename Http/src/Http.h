@@ -8,24 +8,19 @@
 
 class Provisioning;
 class ProcessorExecutor;
-class IRequestSender;
+class ResponseHandler;
+class DownloadManager;
 
 class Http : public QObject
 {
     Q_OBJECT
 public:
-    struct ProvData {
-        QList<QString> urls;
-        uint timeout;
-    };
-
     Http(QObject *obj);
     ~Http();
-    void init(Provisioning* prov);
-    void sendRequest(QSharedPointer<IRequestSender> sender, const QString& url);
+    void init(Provisioning *prov);
+    void sendRequest(DownloadManager *sender, const QString& url);
 
 private slots:
-    void OnProvDataReceived(Http::ProvData provData);
     void protocolProcessingFinished(qint32 id);
 
 private:
@@ -34,5 +29,4 @@ private:
     QSharedPointer<ProcessorMaster>             mProcessorMaster;
     ProcessorExecutor                           mProcessorExecutor;
     int32_t                                     mProtocolIdGenerator; // generator for unique IDs
-    ProvData                                    mProvData;
 };

@@ -12,7 +12,7 @@ public:
     void init(Provisioning* prov);
 
 private slots:
-    void OnProvDataReceived(Http::ProvData provData);
+    void OnProvDataReceived(DownloadManager::ProvData provData);
 };
 
 class ProvisioningTest : public QObject

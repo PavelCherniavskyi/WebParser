@@ -16,11 +16,12 @@ add_executable(${PROJECT_NAME}
     ProvData.xml
     WebParser.cpp
     WebParser.h
-    IRequestSender.h
 )
 
 add_subdirectory(SmartLogger)
 add_subdirectory(Provisioning)
 add_subdirectory(Http)
+add_subdirectory(DownloadManager)
+add_subdirectory(Utils)
 
-target_link_libraries(${PROJECT_NAME} Qt5::Core Provisioning Http SmartLogger)
+target_link_libraries(${PROJECT_NAME} Qt5::Core Provisioning Http SmartLogger Utils DownloadManager)

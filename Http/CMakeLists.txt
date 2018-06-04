@@ -11,7 +11,6 @@ set(SOURCE
         src/private/ProcessorExecutor.cpp
         src/private/ProcessorMaster.cpp
         src/private/ProtocolMaster.cpp
-        src/private/JobExecutor.cpp
         src/private/HttpJob.cpp
         src/private/LibCurlConfig.h
         src/private/ProtocolSlave.h
@@ -20,7 +19,6 @@ set(SOURCE
         src/private/ProcessorMaster.h
         src/private/ProtocolMaster.h
         src/private/HttpJob.h
-        src/private/JobExecutor.h
         src/Http.h
         src/HttpEnums.h
         src/HttpTypes.h

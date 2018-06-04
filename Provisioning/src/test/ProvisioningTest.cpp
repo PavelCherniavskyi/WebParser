@@ -1,15 +1,15 @@
 #include "ProvisioningTest.h"
 
-Q_DECLARE_METATYPE(Http::ProvData);
+Q_DECLARE_METATYPE(DownloadManager::ProvData);
 
 QSharedPointer<Provisioning> provisioning;
 
 void HttpMock::init(Provisioning *prov)
 {
-    connect(prov, &Provisioning::onHttpDataRecieved, this, &HttpMock::OnProvDataReceived);
+    connect(prov, &Provisioning::onDownloadMngrDataRecieved, this, &HttpMock::OnProvDataReceived);
 }
 
-void HttpMock::OnProvDataReceived(Http::ProvData provData)
+void HttpMock::OnProvDataReceived(DownloadManager::ProvData provData)
 {
     QCOMPARE(provData.urls.size(), 3);
     for(uint i = 0; i < provData.urls.size(); ++i) {
@@ -22,7 +22,7 @@ void HttpMock::OnProvDataReceived(Http::ProvData provData)
 
 void ProvisioningTest::initTestCase()
 {
-    qRegisterMetaType<Http::ProvData>("Http::ProvData");
+    qRegisterMetaType<DownloadManager::ProvData>("Http::ProvData");
 }
 
 void ProvisioningTest::getProvisioningTest()

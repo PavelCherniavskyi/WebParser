@@ -3,7 +3,7 @@
 #include <string>
 #include <QMap>
 #include <QVariant>
-#include <vector>
+#include <QVector>
 
 #include "HttpEnums.h"
 
@@ -34,33 +34,19 @@ struct ResponseInfoParams
 
 struct ResponseDataParams
 {
-    int32_t              id;
-    std::vector<uint8_t> data;
+    int32_t             id;
+    QByteArray          data;
+    HttpError           error;
     ResponseDataParams()
         : id(0)
-        , data(std::vector<uint8_t>())
-    {
-    }
-
-    ResponseDataParams(int32_t inId, const std::vector<uint8_t> &inData)
-        : id(inId)
-        , data(inData)
-    {
-    }
-};
-
-struct ProcessingFinishedParams
-{
-    int32_t   id;
-    HttpError error;
-    ProcessingFinishedParams()
-        : id(0)
+        , data(QByteArray())
         , error(HttpError())
     {
-
     }
-    ProcessingFinishedParams(int32_t inId, const HttpError &inError)
+
+    ResponseDataParams(int32_t inId, const QByteArray inData, const HttpError &inError)
         : id(inId)
+        , data(inData)
         , error(inError)
     {
     }

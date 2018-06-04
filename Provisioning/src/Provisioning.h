@@ -3,7 +3,7 @@
 #include <QObject>
 #include <QVector>
 
-#include "../../Http/src/Http.h"
+#include "../../DownloadManager/src/DownloadManager.h"
 #include "../../SmartLogger/src/SmartLogger.h"
 
 class Provisioning : public QObject
@@ -17,11 +17,12 @@ public:
     };
 
     Provisioning(QObject * obj = 0);
+    ~Provisioning();
     bool getProvisioning(QString path = "");
 
 signals:
     void onSmartLoggerDataRecieved(SmartLogger::ProvData provData);
-    void onHttpDataRecieved(Http::ProvData provData);
+    void onDownloadMngrDataRecieved(DownloadManager::ProvData provData);
 
 
 private:
