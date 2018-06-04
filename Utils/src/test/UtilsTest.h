@@ -10,6 +10,8 @@ public:
     bool execute() override;
     inline int numberOfCalls() { return executeCalls.size(); }
 
+public slots:
+    void executionCompleted(int32_t id);
 
 private:
     QVector<bool> executeCalls;
