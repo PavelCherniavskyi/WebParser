@@ -4,9 +4,7 @@
 #include "ProcessorSlave.h"
 #include <QThread>
 
-HttpJob::HttpJob(const QVector<ProcessorSlave *> &processorSlaves, const QString &name)
-  : mProcessorSlaves(processorSlaves)
-  , mName(name)
+HttpJob::HttpJob(const QVector<ProcessorSlave *> &processorSlaves) : mProcessorSlaves(processorSlaves)
 {
 }
 
@@ -35,21 +33,6 @@ int32_t HttpJob::id() const
 void HttpJob::setId(int32_t id)
 {
     mId = id;
-}
-
-const QString &HttpJob::name()
-{
-    return mName;
-}
-
-void HttpJob::executeJob()
-{
-    bool continueExec = execute();
-    if (continueExec) {
-        emit continueExecution();
-    } else {
-        emit executionCompleted(mId);
-    }
 }
 
 void HttpJob::curlSelect()

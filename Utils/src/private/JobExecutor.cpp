@@ -36,7 +36,7 @@ void JobExecutor::execute(QSharedPointer<Job> job, bool printDebugInfo)
     mPrintDebugInfo = printDebugInfo;
 
     if(mPrintDebugInfo){
-        INFO() << "Start job [" << mNewId << "]: '" << job->name() << "'";
+        INFO() << "Start job [" << mNewId << "]";
     }
 
     job->setId(mNewId++);
@@ -65,7 +65,7 @@ void JobExecutor::executionCompleted(int32_t id)
     foreach(QSharedPointer<Job> job, mActiveJobs) {
         if (job->id() == id) {
             if(mPrintDebugInfo){
-                INFO() << "Job [" << id << "]: '" << job->name() << "' completed";
+                INFO() << "Job [" << id << "]: completed";
             }
             if (!mActiveJobs.removeOne(job)) {
                 WARN() << "Can not remove job [" << id << "]";
