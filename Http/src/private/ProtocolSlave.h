@@ -12,16 +12,17 @@ class ProtocolSlave : public QObject
 public:
     explicit ProtocolSlave(const int32_t id);
     ~ProtocolSlave();
-    int32_t     id() const;
-    void        processExecutionResult(const CURLcode executionResult);
-    void        setParams(const QString &url);
-    void        setVerboseLogging(const bool activate);
-    bool        active() const;
-    void        setActive(bool active);
-    QByteArray  responseData() const;
-    CURL*       easyHandle() const;
-    CURLcode    result() const;
-    uint16_t    httpResponseCode() const;
+    int32_t         id() const;
+    void            processExecutionResult(const CURLcode executionResult);
+    void            setParams(const QString &url);
+    void            setVerboseLogging(const bool activate);
+    bool            active() const;
+    void            setActive(bool active);
+    QByteArray      responseData() const;
+    QStringList     responseHeader() const;
+    CURL*           easyHandle() const;
+    CURLcode        result() const;
+    uint16_t        responseCode() const;
 
 signals:
 
@@ -40,4 +41,5 @@ private:
     bool                     mActive;
     CURLcode                 mResult;
     QBuffer                  mRxStream;
+    QStringList              header;
 };

@@ -198,6 +198,11 @@ QByteArray ProtocolSlave::responseData() const
     return mRxStream.buffer();
 }
 
+QStringList ProtocolSlave::responseHeader() const
+{
+    return header;
+}
+
 CURL *ProtocolSlave::easyHandle() const
 {
     return mEasyHandle;
@@ -208,7 +213,7 @@ CURLcode ProtocolSlave::result() const
     return mResult;
 }
 
-uint16_t ProtocolSlave::httpResponseCode() const
+uint16_t ProtocolSlave::responseCode() const
 {
     uint32_t code = 0;
 
@@ -239,10 +244,9 @@ size_t ProtocolSlave::responseHeaderCallback(void *ptr, size_t size, size_t nmem
 {
     size_t dataSize = size * nmemb;
 
-    QString header(QString::fromLocal8Bit(reinterpret_cast<const char *>(ptr), static_cast<int>(dataSize)));
-    header = header.trimmed(); // remove trailing "\n"
-
-    //processHeader(header.toStdString());
+    QString str(QString::fromLocal8Bit(reinterpret_cast<const char *>(ptr), static_cast<int>(dataSize)));
+    str = str.trimmed(); // remove trailing "\n"
+    header.append(str);
 
     return dataSize;
 }
