@@ -3,7 +3,7 @@
 #include "ProtocolSlave.h"
 #include "../../../SmartLogger/src/SmartLogger.h"
 
-const uint32_t DEFAULT_OPERATION_TIMEOUT_MS = 60000;
+const uint32_t DEFAULT_OPERATION_TIMEOUT_MS = 30000;
 
 const QMap<CURLcode, QString> curlCodeToText = {
     {CURLE_OK,                       "CURLE_OK"                      },

@@ -22,6 +22,7 @@ public:
 
 signals:
     void executeJob();
+    void jobIsDone(quint32 id);
 
 private slots:
     void executionCompleted(quint32 id);

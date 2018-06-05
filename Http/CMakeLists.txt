@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.8.12)
 
 project(Http)
 find_package(Qt5Core REQUIRED)
+find_package(Qt5Test REQUIRED)
 
 set(SOURCE
         src/private/Http.cpp
@@ -28,3 +29,14 @@ add_library(${PROJECT_NAME} STATIC ${SOURCE})
 
 target_link_libraries(${PROJECT_NAME} Qt5::Core curl)
 target_include_directories(${PROJECT_NAME} INTERFACE src/)
+
+#Tests =================
+set(TEST_SOURCE
+        src/test/HttpTest.cpp
+        src/test/HttpTest.h
+        src/test/testMain.cpp
+)
+
+add_executable(http_test ${TEST_SOURCE})
+target_link_libraries(http_test Qt5::Test Qt5::Core Utils SmartLogger Provisioning Utils)
+add_test(NAME http_test COMMAND http_test)

@@ -67,6 +67,7 @@ void JobExecutor::executionCompleted(quint32 id)
             if (!mActiveJobs.removeOne(job)) {
                 WARN() << "Can not remove job [" << id << "]";
             }
+            emit jobIsDone(id);
             return;
         }
     }

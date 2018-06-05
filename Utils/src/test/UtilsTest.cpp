@@ -41,10 +41,9 @@ void UtilsTest::jobExecutorTest()
 {
     JobExecutor jobExecutor;
     QSharedPointer<JobMock> job(new JobMock, &QObject::deleteLater);
-    QSignalSpy spy(job.data(), &Job::executionCompleted);
+    QSignalSpy spy(&jobExecutor, &JobExecutor::jobIsDone);
     jobExecutor.execute(job, false);
     QCOMPARE(jobExecutor.currentActiveJobs(), 1);
-
     QVERIFY(spy.wait(500));
 
     QCOMPARE(spy.count(), 1);
