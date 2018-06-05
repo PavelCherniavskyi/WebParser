@@ -1,6 +1,7 @@
 #include <QTest>
 #include <QObject>
 #include "../Job.h"
+#include "../JobExecutor.h"
 
 class JobMock : public Job
 {
@@ -8,13 +9,11 @@ class JobMock : public Job
 public:
     JobMock();
     bool execute() override;
-    inline int numberOfCalls() { return executeCalls.size(); }
-
-public slots:
-    void executionCompleted(int32_t id);
+    inline quint8 calls() { return callNumber; }
 
 private:
     QVector<bool> executeCalls;
+    quint8 callNumber;
 };
 
 class UtilsTest : public QObject

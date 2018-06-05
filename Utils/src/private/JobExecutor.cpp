@@ -10,9 +10,6 @@ JobExecutor::JobExecutor()
     , mPrintDebugInfo(true)
 
 {
-    INFO() << "Creating new thread";
-
-    mWorkerThread.setObjectName("InJobExecutorThread");
     mWorkerThread.start();
 }
 
@@ -59,7 +56,7 @@ void JobExecutor::execute(QSharedPointer<Job> job, bool printDebugInfo)
 }
 
 //--------------------------------------------------------------------------------------------------
-void JobExecutor::executionCompleted(int32_t id)
+void JobExecutor::executionCompleted(quint32 id)
 //--------------------------------------------------------------------------------------------------
 {
     foreach(QSharedPointer<Job> job, mActiveJobs) {

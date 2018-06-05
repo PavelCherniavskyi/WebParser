@@ -9,12 +9,12 @@ const QString provDataPathDefault = "../WebParser/ProvData.xml";
 
 Provisioning::Provisioning(QObject *obj) : QObject(obj)
 {
-    INFO();
+
 }
 
 Provisioning::~Provisioning()
 {
-    INFO();
+
 }
 
 bool Provisioning::getProvisioning(QString path)

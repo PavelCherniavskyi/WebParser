@@ -1,49 +1,59 @@
 #include "UtilsTest.h"
 #include "SmartLogger.h"
+#include <QSignalSpy>
+
+quint32 JobId = 99;
 
 JobMock::JobMock()
 {
     executeCalls = {0, 1, 1, 1, 1};
+    callNumber = executeCalls.size();
 }
 
 bool JobMock::execute()
 {
-
+    callNumber--;
     bool jobCompleted = executeCalls.back();
     executeCalls.pop_back();
-    INFO() << "execute " << jobCompleted;
     return jobCompleted;
-}
-
-void JobMock::executionCompleted(int32_t id)
-{
-    INFO() << "executionCompleted " << id;
-    QCOMPARE(id, 98);
 }
 
 void UtilsTest::initTestCase()
 {
-
 }
 
 void UtilsTest::jobTest()
 {
     QScopedPointer<JobMock> job(new JobMock);
-    job->setId(99);
-    connect(job.data(), &Job::executionCompleted, job.data(), &JobMock::executionCompleted, Qt::QueuedConnection);
+    QSignalSpy spy(job.data(), &Job::executionCompleted);
+    job->setId(JobId);
+    QCOMPARE(job->id(), JobId);
+
     job->executeJob();
-    QCoreApplication::processEvents();
-    QTest::qSleep(500);
-    INFO();
+    QCOMPARE(job->calls(), 0);
+    QCOMPARE(spy.count(), 1);
+
+    QList<QVariant> arguments = spy.takeFirst();
+    QVERIFY(arguments.at(0).toInt() == JobId);
 }
 
 void UtilsTest::jobExecutorTest()
 {
+    JobExecutor jobExecutor;
+    QSharedPointer<JobMock> job(new JobMock, &QObject::deleteLater);
+    QSignalSpy spy(job.data(), &Job::executionCompleted);
+    jobExecutor.execute(job, false);
+    QCOMPARE(jobExecutor.currentActiveJobs(), 1);
 
+    QVERIFY(spy.wait(500));
+
+    QCOMPARE(spy.count(), 1);
+    QList<QVariant> arguments = spy.takeFirst();
+    QVERIFY(arguments.at(0).toInt() == 0); //index of job. As we create a new JobExecutor first job should be 0.
+    QCOMPARE(jobExecutor.currentActiveJobs(), 0);
 }
 
 void UtilsTest::cleanupTestCase()
 {
-
 }
 
