@@ -32,7 +32,7 @@ void DownloadManager::execute()
 
 void DownloadManager::setResponseData(const ResponseDataParams value)
 {
-    INFO() << "Got information response data value: [" << value.id << "] Size of data received: " << value.data.size() << " Error: " << HttpErrorToText[value.error];
+    INFO() << "Final response data [" << value.id << "]: Bytes: " << value.data.size() << ". Error: " << HttpErrorToText[value.error];
     responseHandlers.push_back(value);
 
     if(responseHandlers.size() == mProvData.urls.size()) {

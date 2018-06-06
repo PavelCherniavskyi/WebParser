@@ -113,14 +113,11 @@ void ProtocolMaster::jobExecuted()
 //--------------------------------------------------------------------------------------------------
 {
     if (!mProtocolSlave.active()) {
-        HttpError error = getErrorFromLibcurl();
-
+        const HttpError error = getErrorFromLibcurl();
         const QByteArray data = mProtocolSlave.responseData();
         const QStringList header = mProtocolSlave.responseHeader();
 
-        INFO() << "[" << mId << "] send informationResponseInfoValue( error = " << static_cast<int>(error) << ", " << data.size() << "bytes )";
-
-        mRequestSender->setResponseData(ResponseDataParams(mId, data, getErrorFromLibcurl(), header));
+        mRequestSender->setResponseData(ResponseDataParams(mId, data, error, header));
 
         emit removeProtocolFromProcessing(this);
     }
