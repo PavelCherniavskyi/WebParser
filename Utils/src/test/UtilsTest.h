@@ -23,5 +23,6 @@ private slots:
     void initTestCase();
     void jobTest();
     void jobExecutorTest();
+    void expressServerTest();
     void cleanupTestCase();
 };

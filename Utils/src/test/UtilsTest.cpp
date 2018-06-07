@@ -1,6 +1,10 @@
 #include "UtilsTest.h"
 #include "SmartLogger.h"
+#include "ExpressServer.h"
+#include <curl/curl.h>
 #include <QSignalSpy>
+#include <QStringList>
+#include <QDir>
 
 quint32 JobId = 99;
 
@@ -50,6 +54,30 @@ void UtilsTest::jobExecutorTest()
     QList<QVariant> arguments = spy.takeFirst();
     QVERIFY(arguments.at(0).toInt() == 0); //index of job. As we create a new JobExecutor first job should be 0.
     QCOMPARE(jobExecutor.currentActiveJobs(), 0);
+}
+
+void UtilsTest::expressServerTest()
+{
+    QString arg = QDir::currentPath();
+    arg += "/../../WebParser/Utils/NodeJsExpress/app.js";
+    QStringList arguments = {arg};
+    ExpressServer expressServer(arguments, this);
+    QVERIFY(expressServer.startServer());
+
+    CURL *curl;
+    CURLcode res;
+
+    curl = curl_easy_init();
+    if(curl) {
+        curl_easy_setopt(curl, CURLOPT_URL, "http://localhost/");
+        curl_easy_setopt(curl, CURLOPT_PORT, 3000L);
+
+        res = curl_easy_perform(curl);
+
+        QCOMPARE(res, CURLE_OK);
+
+        curl_easy_cleanup(curl);
+    }
 }
 
 void UtilsTest::cleanupTestCase()

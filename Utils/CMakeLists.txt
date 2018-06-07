@@ -7,8 +7,10 @@ find_package(Qt5Test REQUIRED)
 set(SOURCE
         src/JobExecutor.h
         src/Job.h
+        src/ExpressServer.h
         src/private/Job.cpp
         src/private/JobExecutor.cpp
+        src/private/ExpressServer.cpp
 )
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE})
@@ -24,5 +26,5 @@ set(TEST_SOURCE
 )
 
 add_executable(utils_test ${TEST_SOURCE})
-target_link_libraries(utils_test Qt5::Test Qt5::Core Utils SmartLogger Provisioning)
+target_link_libraries(utils_test Qt5::Test Qt5::Core curl Utils SmartLogger Provisioning)
 add_test(NAME utils_test COMMAND utils_test)
