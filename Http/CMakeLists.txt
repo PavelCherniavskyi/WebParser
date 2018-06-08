@@ -38,5 +38,5 @@ set(TEST_SOURCE
 )
 
 add_executable(http_test ${TEST_SOURCE})
-target_link_libraries(http_test Qt5::Test Qt5::Core Utils SmartLogger Provisioning Utils)
+target_link_libraries(http_test Qt5::Test Qt5::Core Utils SmartLogger Provisioning Utils Http DownloadManager)
 add_test(NAME http_test COMMAND http_test)

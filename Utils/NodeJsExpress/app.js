@@ -1,12 +1,16 @@
-// подключение express
 var express = require("express");
-// создаем объект приложения
+ 
 var app = express();
-// определяем обработчик для маршрута "/"
+ 
 app.get("/", function(request, response){
      
-    // отправляем ответ
-    response.send("<h2>Привет Express!</h2>");
+    response.send("Hello from Express");
 });
-// начинаем прослушивать подключения на 3000 порту
+
+app.get("/protocolslave", function(request, response){
+     
+    response.send("Some data for ProtocolSlave");
+});
+
+
 app.listen(3000);

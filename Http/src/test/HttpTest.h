@@ -7,5 +7,6 @@ class HttpTest : public QObject
 private slots:
     void initTestCase();
     void protocolSlaveTest();
+    void protocolMasterTest();
     void cleanupTestCase();
 };

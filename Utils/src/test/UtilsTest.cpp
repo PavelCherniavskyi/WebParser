@@ -68,16 +68,15 @@ void UtilsTest::expressServerTest()
     CURLcode res;
 
     curl = curl_easy_init();
-    if(curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, "http://localhost/");
-        curl_easy_setopt(curl, CURLOPT_PORT, 3000L);
+    QVERIFY(curl);
+    curl_easy_setopt(curl, CURLOPT_URL, "http://localhost/");
+    curl_easy_setopt(curl, CURLOPT_PORT, 3000L);
 
-        res = curl_easy_perform(curl);
+    res = curl_easy_perform(curl);
 
-        QCOMPARE(res, CURLE_OK);
+    QCOMPARE(res, CURLE_OK);
 
-        curl_easy_cleanup(curl);
-    }
+    curl_easy_cleanup(curl);
 }
 
 void UtilsTest::cleanupTestCase()

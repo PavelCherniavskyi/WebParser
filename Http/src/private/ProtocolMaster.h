@@ -20,7 +20,6 @@ public:
     virtual ~ProtocolMaster();
     int32_t id() const;
     ProtocolSlave *slave();
-    void abort();
     bool sendRequest(const QString &url);
 
 signals:
@@ -38,7 +37,5 @@ private:
     ProtocolSlave mProtocolSlave;
 
     DownloadManager *mRequestSender; // this is necessary for sending responses:
-
-    bool          mAbortRequested;
 };
 

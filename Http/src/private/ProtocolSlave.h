@@ -14,8 +14,10 @@ public:
     ~ProtocolSlave();
     int32_t         id() const;
     void            processExecutionResult(const CURLcode executionResult);
-    void            setParams(const QString &url);
-    void            setVerboseLogging(const bool activate);
+    void            setUrl(const QString &url);
+    void            setTimeout(const uint32_t ms);
+    void            setPort(const uint32_t port);
+    void            setVerboseLogging(bool activate);
     bool            active() const;
     void            setActive(bool active);
     QByteArray      responseData() const;
@@ -28,7 +30,7 @@ signals:
 
 private:
     ProtocolSlave(); // default constructor is denied
-    void            setTimeout(const uint32_t ms);
+
     static size_t   responseHeaderDispatcherCallback(void *ptr, size_t size, size_t nmemb, void *stream);
     size_t          responseHeaderCallback(void *ptr, size_t size, size_t nmemb);
     static size_t   writeDispatcherCallback(void *ptr, size_t size, size_t nmemb, void *stream);

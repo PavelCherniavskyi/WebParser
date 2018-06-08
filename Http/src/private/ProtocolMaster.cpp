@@ -6,7 +6,6 @@ ProtocolMaster::ProtocolMaster(DownloadManager *sender, int32_t id)
     : mId(id)
     , mProtocolSlave(id)
     , mRequestSender(sender)
-    , mAbortRequested(false)
 {
     INFO() << "[" << mId << "] constructor";
     if(mRequestSender == nullptr) {
@@ -14,9 +13,7 @@ ProtocolMaster::ProtocolMaster(DownloadManager *sender, int32_t id)
     }
 }
 
-//--------------------------------------------------------------------------------------------------
 ProtocolMaster::~ProtocolMaster()
-//--------------------------------------------------------------------------------------------------
 {
     INFO() << "[" << mId << "] destructor";
 
@@ -25,37 +22,24 @@ ProtocolMaster::~ProtocolMaster()
     }
 }
 
-//--------------------------------------------------------------------------------------------------
 int32_t ProtocolMaster::id() const
-//--------------------------------------------------------------------------------------------------
 {
     return mId;
 }
 
-//--------------------------------------------------------------------------------------------------
 ProtocolSlave *ProtocolMaster::slave()
-//--------------------------------------------------------------------------------------------------
 {
     return &mProtocolSlave;
 }
 
-//--------------------------------------------------------------------------------------------------
-void ProtocolMaster::abort()
-//--------------------------------------------------------------------------------------------------
-{
-    mAbortRequested = true;
-}
-
-//--------------------------------------------------------------------------------------------------
 bool ProtocolMaster::sendRequest(const QString &url)
-//--------------------------------------------------------------------------------------------------
 {
     bool success = false;
 
     INFO() << "[" << mId << "] sendRequest: " << url;
 
     if (!mProtocolSlave.active()) {
-        mProtocolSlave.setParams(url);
+        mProtocolSlave.setUrl(url);
 
         emit addProtocolToProcessing(this);
         success = true;
@@ -66,9 +50,7 @@ bool ProtocolMaster::sendRequest(const QString &url)
     return success;
 }
 
-//--------------------------------------------------------------------------------------------------
 HttpError ProtocolMaster::getErrorFromLibcurl()
-//--------------------------------------------------------------------------------------------------
 {
     HttpError error = HttpError::NO_ERROR;
 
@@ -108,9 +90,7 @@ HttpError ProtocolMaster::getErrorFromLibcurl()
     return error;
 }
 
-//--------------------------------------------------------------------------------------------------
 void ProtocolMaster::jobExecuted()
-//--------------------------------------------------------------------------------------------------
 {
     if (!mProtocolSlave.active()) {
         const HttpError error = getErrorFromLibcurl();

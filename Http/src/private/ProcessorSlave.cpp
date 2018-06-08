@@ -18,6 +18,7 @@ ProcessorSlave::ProcessorSlave(int32_t id)
 
 ProcessorSlave::~ProcessorSlave()
 {
+    INFO() << "[" << mId << "] destructor";
     curl_multi_cleanup(mMh);
     mMh = nullptr;
 }

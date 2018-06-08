@@ -137,6 +137,7 @@ ProtocolSlave::ProtocolSlave(const int32_t id)
 ProtocolSlave::~ProtocolSlave()
 //--------------------------------------------------------------------------------------------------
 {
+    INFO() << "[" << mId << "] destructor";
     mRxStream.close();
 
     curl_easy_cleanup(mEasyHandle);
@@ -161,7 +162,7 @@ void ProtocolSlave::processExecutionResult(const CURLcode executionResult)
 }
 
 
-void ProtocolSlave::setParams(const QString &url)
+void ProtocolSlave::setUrl(const QString &url)
 {
     if (CURLE_OK != curl_easy_setopt(mEasyHandle, CURLOPT_URL, url.toStdString().c_str())) {
         WARN() << "[" << mId << "] Cannot set url";
@@ -176,7 +177,14 @@ void ProtocolSlave::setTimeout(const uint32_t ms)
     }
 }
 
-void ProtocolSlave::setVerboseLogging(const bool activate)
+void ProtocolSlave::setPort(const uint32_t port)
+{
+    if (CURLE_OK != curl_easy_setopt( mEasyHandle, CURLOPT_PORT, port)) {
+        WARN() << "[" << mId << "] Cannot set port";
+    }
+}
+
+void ProtocolSlave::setVerboseLogging(bool activate)
 {
     if (CURLE_OK != curl_easy_setopt(mEasyHandle, CURLOPT_VERBOSE, activate ? 1 : 0)) {
         WARN() << "[" << mId << "] Cannot set verbose logging";
