@@ -9,18 +9,17 @@
 #include "../HttpTypes.h"
 
 class Http;
-class DownloadManager;
+class IDownloadManager;
 
-/*! \brief class ProtocolMaster handles Libcurl easyHandle (high-level) */
 class ProtocolMaster : public QObject
 {
     Q_OBJECT
 public:
-    explicit ProtocolMaster(DownloadManager *sender, int32_t id);
+    explicit ProtocolMaster(IDownloadManager *sender, int32_t id, QObject *obj = 0);
     virtual ~ProtocolMaster();
     int32_t id() const;
     ProtocolSlave *slave();
-    bool sendRequest(const QString &url);
+    bool sendRequest(const QString &url, int port = 80);
 
 signals:
     void addProtocolToProcessing(ProtocolMaster *protocol);
@@ -36,6 +35,6 @@ private:
     int32_t       mId;
     ProtocolSlave mProtocolSlave;
 
-    DownloadManager *mRequestSender; // this is necessary for sending responses:
+    IDownloadManager *mRequestSender; // this is necessary for sending responses:
 };
 

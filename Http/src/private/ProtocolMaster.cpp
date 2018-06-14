@@ -2,8 +2,8 @@
 #include "../../../SmartLogger/src/SmartLogger.h"
 #include "../../../DownloadManager/src/DownloadManager.h"
 
-ProtocolMaster::ProtocolMaster(DownloadManager *sender, int32_t id)
-    : mId(id)
+ProtocolMaster::ProtocolMaster(IDownloadManager *sender, int32_t id, QObject *obj) : QObject(obj)
+    , mId(id)
     , mProtocolSlave(id)
     , mRequestSender(sender)
 {
@@ -32,7 +32,7 @@ ProtocolSlave *ProtocolMaster::slave()
     return &mProtocolSlave;
 }
 
-bool ProtocolMaster::sendRequest(const QString &url)
+bool ProtocolMaster::sendRequest(const QString &url, int port)
 {
     bool success = false;
 
@@ -40,6 +40,7 @@ bool ProtocolMaster::sendRequest(const QString &url)
 
     if (!mProtocolSlave.active()) {
         mProtocolSlave.setUrl(url);
+        mProtocolSlave.setPort(port);
 
         emit addProtocolToProcessing(this);
         success = true;

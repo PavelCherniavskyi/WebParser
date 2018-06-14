@@ -10,25 +10,33 @@
 class ProcessorMaster;
 class JobExecutor;
 
-/*! \brief class ProcessorExecutor handles execution of multiple libcurl multihandles */
-class ProcessorExecutor : public QObject
+
+class IProcessorExecutor : public QObject
 {
     Q_OBJECT
 public:
-    explicit ProcessorExecutor();
-    virtual ~ProcessorExecutor();
-    void init();
-    void deinit();
-    bool isExecuting();
-
-
+    IProcessorExecutor(QObject *obj = 0) : QObject(obj){}
 signals:
-    void executeJob(const QVector<ProcessorSlave *>& processorSlaves);
+    void executeJob(const QVector<ProcessorSlave *> &processorSlaves);
 
 public slots:
-    void addProcessorToExecution(ProcessorMaster *processor);
-    void removeProcessorFromExecution(ProcessorMaster *processor);
-    void handleJobExecuted();
+    virtual void addProcessorToExecution(ProcessorMaster *processor) = 0;
+    virtual void removeProcessorFromExecution(ProcessorMaster *processor) = 0;
+    virtual void handleJobExecuted() = 0;
+};
+
+class ProcessorExecutor : public IProcessorExecutor
+{
+    Q_OBJECT
+public:
+    explicit ProcessorExecutor(QObject *obj = 0);
+    virtual ~ProcessorExecutor();
+    bool isExecuting();
+
+public slots:
+    void addProcessorToExecution(ProcessorMaster *processor) override;
+    void removeProcessorFromExecution(ProcessorMaster *processor) override;
+    void handleJobExecuted() override;
 
 private:
     bool executeProcessorSlaves();

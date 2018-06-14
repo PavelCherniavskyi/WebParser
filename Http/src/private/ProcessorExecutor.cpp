@@ -4,8 +4,8 @@
 #include "ProcessorMaster.h"
 #include "ProcessorSlave.h"
 
-ProcessorExecutor::ProcessorExecutor()
-    : mActive(false)
+ProcessorExecutor::ProcessorExecutor(QObject *obj) : IProcessorExecutor(obj)
+    , mActive(false)
     , mHttpJobExecutor(new JobExecutor)
 {
     INFO() << "constructor";
@@ -14,20 +14,6 @@ ProcessorExecutor::ProcessorExecutor()
 ProcessorExecutor::~ProcessorExecutor()
 {
     INFO() << "destructor";
-}
-
-//--------------------------------------------------------------------------------------------------
-void ProcessorExecutor::init()
-//--------------------------------------------------------------------------------------------------
-{
-    INFO();
-}
-
-//--------------------------------------------------------------------------------------------------
-void ProcessorExecutor::deinit()
-//--------------------------------------------------------------------------------------------------
-{
-    INFO();
 }
 
 //--------------------------------------------------------------------------------------------------

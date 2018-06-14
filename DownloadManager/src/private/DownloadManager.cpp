@@ -3,7 +3,7 @@
 #include "../../../SmartLogger/src/SmartLogger.h"
 #include "../../../Provisioning/src/Provisioning.h"
 
-DownloadManager::DownloadManager(QObject *obj) : QObject(obj)
+DownloadManager::DownloadManager(QObject *obj) : IDownloadManager(obj)
 {
 
 }
@@ -13,7 +13,7 @@ void DownloadManager::init(Provisioning *prov)
     connect(prov, &Provisioning::onDownloadMngrDataRecieved, this, &DownloadManager::OnProvDataReceived);
 }
 
-void DownloadManager::buildClients(Http *http)
+void DownloadManager::buildClients(QSharedPointer<Http> http)
 {
     m_http = http;
 }
@@ -39,7 +39,6 @@ void DownloadManager::setResponseData(const ResponseDataParams value)
         INFO() << "Execution complete. Got " << responseHandlers.size() << " responses.";
         emit doneExecution();
     }
-
 }
 
 void DownloadManager::OnProvDataReceived(DownloadManager::ProvData provData)

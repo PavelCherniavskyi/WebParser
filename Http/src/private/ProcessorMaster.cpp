@@ -2,36 +2,27 @@
 #include "../../../SmartLogger/src/SmartLogger.h"
 #include "ProtocolMaster.h"
 
-// NOTE: being in active state the workerthread processes the slave part (ProcessorSlave) of this ProcessorMaster.
-// In Active state access to the ProcessorSlave is not possible without race condition.
-
-//--------------------------------------------------------------------------------------------------
-ProcessorMaster::ProcessorMaster(int32_t id)
-//--------------------------------------------------------------------------------------------------
-    : mId(id)
+ProcessorMaster::ProcessorMaster(int32_t id, QObject *obj) : IProcessorMaster(obj)
+    , mId(id)
     , mActive(false)
+    , mProtocolMastersAdd()
     , mProcessorSlave(id)
+    , mProtocolMasters()
 {
     INFO() << "[" << mId << "] constructor";
 }
 
-//--------------------------------------------------------------------------------------------------
 ProcessorMaster::~ProcessorMaster()
-//--------------------------------------------------------------------------------------------------
 {
     INFO() << "[" << mId << "] destructor";
 }
 
-//--------------------------------------------------------------------------------------------------
 ProcessorSlave *ProcessorMaster::slave()
-//--------------------------------------------------------------------------------------------------
 {
     return &mProcessorSlave;
 }
 
-//--------------------------------------------------------------------------------------------------
 void ProcessorMaster::jobExecuted()
-//--------------------------------------------------------------------------------------------------
 {
     if (mActive) {
 
@@ -49,9 +40,7 @@ void ProcessorMaster::jobExecuted()
     }
 }
 
-//--------------------------------------------------------------------------------------------------
 void ProcessorMaster::addProtocolToProcessing(ProtocolMaster *protocol)
-//--------------------------------------------------------------------------------------------------
 {
     if (protocol) {
         mProtocolMastersAdd.push_back(protocol);
@@ -71,9 +60,7 @@ void ProcessorMaster::addProtocolToProcessing(ProtocolMaster *protocol)
     }
 }
 
-//--------------------------------------------------------------------------------------------------
 void ProcessorMaster::removeProtocolFromProcessing(ProtocolMaster *protocol)
-//--------------------------------------------------------------------------------------------------
 {
     if (protocol) {
         auto iter = std::find(mProtocolMasters.begin(), mProtocolMasters.end(), protocol);
@@ -91,9 +78,7 @@ void ProcessorMaster::removeProtocolFromProcessing(ProtocolMaster *protocol)
     }
 }
 
-//--------------------------------------------------------------------------------------------------
 void ProcessorMaster::addProtocolMasters()
-//--------------------------------------------------------------------------------------------------
 {
     for ( auto protocol : mProtocolMastersAdd ) {
         // Store pending ProtocolMaster as active ProtocolMaster.

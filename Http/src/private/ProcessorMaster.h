@@ -7,16 +7,14 @@
 #include "ProcessorSlave.h"
 
 class ProtocolMaster;
+class ProcessorMaster;
 
-/*! \brief class ProcessorMaster handles Libcurl multiHandle (high-level) */
-class ProcessorMaster : public QObject
+class IProcessorMaster : public QObject
 {
     Q_OBJECT
 public:
-    explicit ProcessorMaster(int32_t id);
-    ~ProcessorMaster();
-    ProcessorSlave *slave();
-    void jobExecuted();
+    IProcessorMaster(QObject *obj = 0) : QObject(obj) {}
+    virtual void jobExecuted() = 0;
 
 signals:
     void addProcessorToExecution(ProcessorMaster *processor);
@@ -24,20 +22,32 @@ signals:
     void protocolProcessingFinished(qint32 id);
 
 public slots:
-    void addProtocolToProcessing(ProtocolMaster *protocol);
-    void removeProtocolFromProcessing(ProtocolMaster *protocol);
+    virtual void addProtocolToProcessing(ProtocolMaster *protocol) = 0;
+    virtual void removeProtocolFromProcessing(ProtocolMaster *protocol) = 0;
+};
+
+class ProcessorMaster : public IProcessorMaster
+{
+    Q_OBJECT
+public:
+    explicit ProcessorMaster(int32_t id, QObject *obj = 0);
+    ~ProcessorMaster();
+    ProcessorSlave *slave();
+    void jobExecuted() override;
+
+public slots:
+    void addProtocolToProcessing(ProtocolMaster *protocol) override;
+    void removeProtocolFromProcessing(ProtocolMaster *protocol) override;
 
 private:
     ProcessorMaster();
     void addProtocolMasters();
-
     HttpError getErrorFromLibcurl();
 
     uint32_t       mId;
     bool           mActive;
-    ProcessorSlave mProcessorSlave;
-
-    QVector<ProtocolMaster *> mProtocolMasters;
     QVector<ProtocolMaster *> mProtocolMastersAdd;
+    ProcessorSlave mProcessorSlave;
+    QVector<ProtocolMaster *> mProtocolMasters;
 };
 

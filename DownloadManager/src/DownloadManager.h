@@ -10,7 +10,19 @@ class Http;
 class ResponseHandler;
 class Provisioning;
 
-class DownloadManager : public QObject
+class IDownloadManager: public QObject
+{
+    Q_OBJECT
+public:
+    IDownloadManager(QObject *obj = 0) : QObject(obj) {}
+    virtual void execute() = 0;
+    virtual void setResponseData(const ResponseDataParams value) = 0;
+    virtual ~IDownloadManager() {}
+signals:
+    void doneExecution();
+};
+
+class DownloadManager : public IDownloadManager
 {
     Q_OBJECT
 public:
@@ -21,21 +33,17 @@ public:
 
     DownloadManager(QObject *obj = 0);
     void init(Provisioning *prov);
-    void buildClients(Http *http);
-    void execute();
-    void setResponseData(const ResponseDataParams value);
-
-signals:
-    void doneExecution();
+    void buildClients(QSharedPointer<Http> http);
+    void execute() override;
+    void setResponseData(const ResponseDataParams value) override;
 
 private slots:
-
     void OnProvDataReceived(DownloadManager::ProvData provData);
 
 private:
     bool                                        checkPreconditions();
 
-    Http                                        *m_http;
+    QSharedPointer<Http>                        m_http;
     QVector<ResponseDataParams>                 responseHandlers;
     ProvData                                    mProvData;
 };

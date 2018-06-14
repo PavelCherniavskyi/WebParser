@@ -18,7 +18,7 @@ void WebParser::init()
     provisioning = QSharedPointer<Provisioning>(new Provisioning(this));
     http = QSharedPointer<Http>(new Http(this));
     downloadManager = QSharedPointer<DownloadManager>(new DownloadManager(this));
-    downloadManager->buildClients(http.data());
+    downloadManager->buildClients(http);
 
     connect(downloadManager.data(), &DownloadManager::doneExecution, this, &WebParser::quit);
 

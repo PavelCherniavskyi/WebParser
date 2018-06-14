@@ -31,7 +31,7 @@ void Http::sendRequest(DownloadManager *sender, const QString &url)
 
     INFO() << "url =" << url;
 
-    QSharedPointer<ProtocolMaster> protocol = QSharedPointer<ProtocolMaster>::create(sender, mProtocolIdGenerator++);
+    QSharedPointer<ProtocolMaster> protocol = QSharedPointer<ProtocolMaster>::create(sender, mProtocolIdGenerator++, this);
 
     connect(protocol.data(), &ProtocolMaster::addProtocolToProcessing,       mProcessorMaster.data(), &ProcessorMaster::addProtocolToProcessing     );
     connect(protocol.data(), &ProtocolMaster::removeProtocolFromProcessing,  mProcessorMaster.data(), &ProcessorMaster::removeProtocolFromProcessing);
