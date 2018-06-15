@@ -30,6 +30,7 @@ int32_t ProcessorSlave::id() const
 
 int64_t ProcessorSlave::timeout() const
 {
+    INFO();
     int64_t socketTimeoutMs = defaultLibcurlSocketTimeoutMs;
 
     if (CURLM_OK != curl_multi_timeout(mMh, &socketTimeoutMs)) {
@@ -42,18 +43,20 @@ int64_t ProcessorSlave::timeout() const
 
 void ProcessorSlave::descriptors(fd_set *fdread, fd_set *fdwrite, fd_set *fdexcep, int32_t *maxfd) const
 {
+    INFO();
     if (CURLM_OK != curl_multi_fdset(mMh, fdread, fdwrite, fdexcep, maxfd)) {
         WARN() << "[" << mId << "] Cannot get socket descriptors!";
     }
 }
 
-int32_t ProcessorSlave::runningProtocols() const
+CURLM *ProcessorSlave::getMultiHandle()
 {
-    return mLastRunningProtocols;
+    return mMh;
 }
 
 bool ProcessorSlave::add(ProtocolSlave *protocol)
 {
+    INFO();
     bool success = false;
 
     if (nullptr != protocol) {
@@ -63,37 +66,35 @@ bool ProcessorSlave::add(ProtocolSlave *protocol)
 
         if(CURLM_OK == curl_multi_add_handle(mMh, protocol->easyHandle())) {
             mLastRunningProtocols++;
+            success = true;
         } else {
             WARN() << "[" << mId << "] Cannot add easyHandle to multiHandle!";
         }
-
-        success = true;
     } else {
         WARN() << "[" << mId << "] nullptr == protocol!";
     }
-
     return success;
 }
 
 bool ProcessorSlave::remove(ProtocolSlave *protocol)
 {
-    bool success = false;
+    INFO();
+    bool success = true;
 
     if (nullptr != protocol) {
         protocol->setActive(false);
-        success = true;
 
         auto iter = std::find(mProtocols.begin(), mProtocols.end(), protocol);
 
         if (mProtocols.end() != iter) {
             mProtocols.erase(iter);
         } else {
-            INFO() << "[" << mId << "] Cannot find protocol!";
+            WARN() << "[" << mId << "] Cannot find protocol!";
             success = false;
         }
 
         if (CURLM_OK != curl_multi_remove_handle(mMh, protocol->easyHandle())) {
-            INFO() << "[" << mId << "] Cannot remove easyHandle from multiHandle";
+            WARN() << "[" << mId << "] Cannot remove easyHandle from multiHandle";
             success = false;
         }
     }
@@ -103,6 +104,7 @@ bool ProcessorSlave::remove(ProtocolSlave *protocol)
 
 void ProcessorSlave::execute()
 {
+    INFO() << "mNowRunningProtocols before: " <<    mNowRunningProtocols;
     while (CURLM_CALL_MULTI_PERFORM == curl_multi_perform(mMh, &mNowRunningProtocols)) {
     }
     if (mNowRunningProtocols < mLastRunningProtocols) {
@@ -125,4 +127,6 @@ void ProcessorSlave::execute()
             }
         }
     }
+
+    INFO() << "mNowRunningProtocols after: " << mNowRunningProtocols;
 }

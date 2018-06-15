@@ -7,7 +7,7 @@
 
 const QString nodeJSdefaultPath = "/usr/bin/node";
 
-ExpressServer::ExpressServer(QStringList &arguments, QObject *parent) : QObject(parent)
+ExpressServer::ExpressServer(QStringList arguments, QObject *parent) : QObject(parent)
   , mProgPath(nodeJSdefaultPath)
   , mArguments(arguments)
   , node(new QProcess)
@@ -61,6 +61,11 @@ bool ExpressServer::startServer()
 void ExpressServer::setProgPath(QString progPath)
 {
     mProgPath = progPath;
+}
+
+void ExpressServer::setArguments(QStringList args)
+{
+    mArguments = args;
 }
 
 bool ExpressServer::isServerUp()

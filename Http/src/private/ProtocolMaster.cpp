@@ -36,7 +36,7 @@ bool ProtocolMaster::sendRequest(const QString &url, int port)
 {
     bool success = false;
 
-    INFO() << "[" << mId << "] sendRequest: " << url;
+    INFO() << "[" << mId << "] url: " << url << "port: " << port;
 
     if (!mProtocolSlave.active()) {
         mProtocolSlave.setUrl(url);
@@ -93,6 +93,7 @@ HttpError ProtocolMaster::getErrorFromLibcurl()
 
 void ProtocolMaster::jobExecuted()
 {
+    INFO() << mProtocolSlave.active();
     if (!mProtocolSlave.active()) {
         const HttpError error = getErrorFromLibcurl();
         const QByteArray data = mProtocolSlave.responseData();

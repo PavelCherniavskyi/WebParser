@@ -27,6 +27,7 @@ bool ProcessorExecutor::isExecuting()
 bool ProcessorExecutor::executeProcessorSlaves()
 //--------------------------------------------------------------------------------------------------
 {
+    INFO() << "mProcessorMasters: " << mProcessorMasters.size();
     bool executing = false;
 
     QVector<ProcessorSlave *> processorSlaves;
@@ -36,9 +37,11 @@ bool ProcessorExecutor::executeProcessorSlaves()
             processorSlaves.push_back(processorMaster->slave());
         }
 
+        INFO() << "Size of processorSlaves: " << processorSlaves.size();
+
         QSharedPointer<HttpJob> job(new HttpJob(processorSlaves), &QObject::deleteLater);
         connect(job.data(), &HttpJob::jobExecuted, this, &ProcessorExecutor::handleJobExecuted);
-        mHttpJobExecutor->execute(job, false);
+        mHttpJobExecutor->execute(job, true);
 
         executing = true;
     }
@@ -50,6 +53,7 @@ bool ProcessorExecutor::executeProcessorSlaves()
 void ProcessorExecutor::addProcessorToExecution(ProcessorMaster *processor)
 //--------------------------------------------------------------------------------------------------
 {
+    INFO() << processor->Id();
     if (processor) {
         mProcessorMasters.push_back(processor);
 
@@ -70,6 +74,7 @@ void ProcessorExecutor::addProcessorToExecution(ProcessorMaster *processor)
 void ProcessorExecutor::removeProcessorFromExecution(ProcessorMaster *processor)
 //--------------------------------------------------------------------------------------------------
 {
+    INFO();
     if (processor) {
         auto iter = std::find(mProcessorMasters.begin(), mProcessorMasters.end(), processor);
 
@@ -87,6 +92,7 @@ void ProcessorExecutor::removeProcessorFromExecution(ProcessorMaster *processor)
 void ProcessorExecutor::handleJobExecuted()
 //--------------------------------------------------------------------------------------------------
 {
+    INFO() << mActive;
     if (mActive) {
         for (auto &processorMaster : mProcessorMasters) {
             processorMaster->jobExecuted();

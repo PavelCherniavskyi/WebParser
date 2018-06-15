@@ -34,6 +34,7 @@ public:
     ~ProcessorMaster();
     ProcessorSlave *slave();
     void jobExecuted() override;
+    uint32_t Id();
 
 public slots:
     void addProtocolToProcessing(ProtocolMaster *protocol) override;

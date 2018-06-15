@@ -17,5 +17,10 @@ app.get("/protocolmaster", function(request, response){
     response.send("Some data for ProtocolMaster");
 });
 
+app.get("/processorslave", function(request, response){
+     
+    response.send("Some data for ProcessorSlave");
+});
+
 
 app.listen(3000);

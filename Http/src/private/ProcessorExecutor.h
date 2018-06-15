@@ -2,9 +2,7 @@
 
 #include <QObject>
 #include <QSharedPointer>
-#include <memory>
-#include <vector>
-
+#include <QScopedPointer>
 #include "HttpJob.h"
 
 class ProcessorMaster;
@@ -16,8 +14,6 @@ class IProcessorExecutor : public QObject
     Q_OBJECT
 public:
     IProcessorExecutor(QObject *obj = 0) : QObject(obj){}
-signals:
-    void executeJob(const QVector<ProcessorSlave *> &processorSlaves);
 
 public slots:
     virtual void addProcessorToExecution(ProcessorMaster *processor) = 0;
@@ -42,7 +38,7 @@ private:
     bool executeProcessorSlaves();
 
     bool                           mActive;
-    std::unique_ptr<JobExecutor>   mHttpJobExecutor;
-    std::vector<ProcessorMaster*> mProcessorMasters;
+    QScopedPointer<JobExecutor>   mHttpJobExecutor;
+    QVector<ProcessorMaster*> mProcessorMasters;
 };
 

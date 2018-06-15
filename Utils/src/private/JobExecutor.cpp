@@ -45,10 +45,6 @@ void JobExecutor::execute(QSharedPointer<Job> job, bool printDebugInfo)
 
     job->moveToThread(&mWorkerThread);
 
-    if(mPrintDebugInfo){
-        INFO() << "Thread state:" << mWorkerThread.isRunning();
-    }
-
     emit executeJob();
 
     // disconnect because we need to send signal to Job once

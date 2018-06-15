@@ -24,6 +24,7 @@ ProcessorSlave *ProcessorMaster::slave()
 
 void ProcessorMaster::jobExecuted()
 {
+    INFO() << mActive;
     if (mActive) {
 
         //use reverse iterator as protocols might be erased inside the loop
@@ -40,8 +41,14 @@ void ProcessorMaster::jobExecuted()
     }
 }
 
+uint32_t ProcessorMaster::Id()
+{
+    return mId;
+}
+
 void ProcessorMaster::addProtocolToProcessing(ProtocolMaster *protocol)
 {
+    INFO() << protocol->id();
     if (protocol) {
         mProtocolMastersAdd.push_back(protocol);
 
@@ -62,6 +69,7 @@ void ProcessorMaster::addProtocolToProcessing(ProtocolMaster *protocol)
 
 void ProcessorMaster::removeProtocolFromProcessing(ProtocolMaster *protocol)
 {
+    INFO() << protocol->id();
     if (protocol) {
         auto iter = std::find(mProtocolMasters.begin(), mProtocolMasters.end(), protocol);
 
@@ -80,6 +88,7 @@ void ProcessorMaster::removeProtocolFromProcessing(ProtocolMaster *protocol)
 
 void ProcessorMaster::addProtocolMasters()
 {
+    INFO() << "size of mProtocolMastersAdd: " << mProtocolMastersAdd.size();
     for ( auto protocol : mProtocolMastersAdd ) {
         // Store pending ProtocolMaster as active ProtocolMaster.
         mProtocolMasters.push_back(protocol);

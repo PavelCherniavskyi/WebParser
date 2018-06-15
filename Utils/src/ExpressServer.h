@@ -8,10 +8,11 @@ class ExpressServer : public QObject
 {
     Q_OBJECT
 public:
-    explicit ExpressServer(QStringList &agruments, QObject *parent = nullptr);
+    explicit ExpressServer(QStringList agruments = {}, QObject *parent = nullptr);
     ~ExpressServer();
     bool startServer();
     void setProgPath(QString progPath);
+    void setArguments(QStringList args);
 
 signals:
 

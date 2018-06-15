@@ -1,6 +1,7 @@
 #include <QObject>
 #include <QTest>
 #include "DownloadManager.h"
+#include "ExpressServer.h"
 #include "../src/private/ProcessorMaster.h"
 #include "../src/private/ProcessorExecutor.h"
 
@@ -46,10 +47,15 @@ public slots:
 
 class HttpTest : public QObject
 {
+public:
     Q_OBJECT
 private slots:
     void initTestCase();
     void protocolSlaveTest();
     void protocolMasterTest();
+    void processorSlaveTest();
     void cleanupTestCase();
+
+private:
+    ExpressServer expressServer;
 };

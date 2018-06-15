@@ -15,7 +15,7 @@ public:
     int32_t id() const;
     int64_t timeout() const;
     void descriptors(fd_set *fdread, fd_set *fdwrite, fd_set *fdexcep, int32_t *maxfd) const;
-    int32_t runningProtocols() const;
+    CURLM* getMultiHandle();
     bool add(ProtocolSlave *protocol);
     bool remove(ProtocolSlave *protocol);
     void execute();

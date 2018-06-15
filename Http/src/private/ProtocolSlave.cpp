@@ -198,6 +198,7 @@ bool ProtocolSlave::active() const
 
 void ProtocolSlave::setActive(bool active)
 {
+    INFO() << "active - " << (active ? "true" : "false");
     mActive = active;
 }
 

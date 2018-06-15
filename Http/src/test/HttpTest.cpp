@@ -1,5 +1,5 @@
 #include "HttpTest.h"
-#include "ExpressServer.h"
+#include "JobExecutor.h"
 #include "../src/private/ProtocolSlave.h"
 #include "../src/private/ProtocolMaster.h"
 #include "../../../SmartLogger/src/SmartLogger.h"
@@ -42,21 +42,23 @@ void ProcessorExecutorMock::removeProcessorFromExecution(ProcessorMaster *proces
 
 void ProcessorExecutorMock::handleJobExecuted()
 {
-
+//    for (auto &processorMaster : mProcessorMasters) {
+//        processorMaster->jobExecuted();
+//    }
 }
 
 void HttpTest::initTestCase()
 {
+    QString arg = QDir::currentPath();
+    arg += "/../../WebParser/Utils/NodeJsExpress/app.js";
+    QStringList arguments = {arg};
+    expressServer.setArguments(arguments);
+
+    QVERIFY(expressServer.startServer());
 }
 
 void HttpTest::protocolSlaveTest()
 {
-    QString arg = QDir::currentPath();
-    arg += "/../../WebParser/Utils/NodeJsExpress/app.js";
-    QStringList arguments = {arg};
-    ExpressServer expressServer(arguments, this);
-    QVERIFY(expressServer.startServer());
-
     ProtocolSlave slave(99);
     slave.setPort(3000);
     slave.setUrl("http://localhost/protocolslave");
@@ -77,17 +79,11 @@ void HttpTest::protocolSlaveTest()
 
 void HttpTest::protocolMasterTest()
 {
-    QString arg = QDir::currentPath();
-    arg += "/../../WebParser/Utils/NodeJsExpress/app.js";
-    QStringList arguments = {arg};
-    ExpressServer expressServer(arguments, this);
-    QVERIFY(expressServer.startServer());
-
     DownloadManagerMock *manager = new DownloadManagerMock(this);
     ProtocolMaster *protocol = new ProtocolMaster(manager, 88, this);
     ProcessorMasterMock *processorMaster = new ProcessorMasterMock(this);
-    connect(protocol,           &ProtocolMaster::addProtocolToProcessing,           processorMaster,    &ProcessorMasterMock::addProtocolToProcessing       );
-    connect(protocol,           &ProtocolMaster::removeProtocolFromProcessing,      processorMaster,    &ProcessorMasterMock::removeProtocolFromProcessing  );
+    connect(protocol, &ProtocolMaster::addProtocolToProcessing,     processorMaster, &ProcessorMasterMock::addProtocolToProcessing     );
+    connect(protocol, &ProtocolMaster::removeProtocolFromProcessing,processorMaster, &ProcessorMasterMock::removeProtocolFromProcessing);
     protocol->sendRequest("http://localhost/protocolmaster", 3000);
 
     QCOMPARE(processorMaster->getProtocolMasters().size(), 1);
@@ -101,10 +97,60 @@ void HttpTest::protocolMasterTest()
 
     QVERIFY(processorMaster->getProtocolMasters().empty());
 
-    QCOMPARE(manager->getResponseData().back().id, 88);
-    QCOMPARE(manager->getResponseData().back().data, "Some data for ProtocolMaster");
-    QCOMPARE(manager->getResponseData().back().error, 0);
-    QCOMPARE(manager->getResponseData().back().header.size(), 8);
+    ResponseDataParams response = manager->getResponseData().back();
+    QCOMPARE(response.id, 88);
+    QCOMPARE(response.data, "Some data for ProtocolMaster");
+    QCOMPARE(response.error, 0);
+    QCOMPARE(response.header.size(), 8);
+}
+
+void HttpTest::processorSlaveTest()
+{
+    QScopedPointer<ProcessorSlave> procSlave(new ProcessorSlave(77));
+    QScopedPointer<ProtocolSlave> protocolSlave(new ProtocolSlave(66));
+    protocolSlave->setPort(3000);
+    protocolSlave->setUrl("http://localhost/processorslave");
+
+    QVERIFY(procSlave->add(protocolSlave.data()));
+
+    fd_set fdRead, fdWrite, fdError;
+    struct timeval timeVal;
+    int maxFd = -1;
+    int64_t timeout;
+
+    timeout = procSlave->timeout();
+    procSlave->execute();
+
+    do
+    {
+        FD_ZERO(&fdRead);
+        FD_ZERO(&fdWrite);
+        FD_ZERO(&fdError);
+
+        procSlave->descriptors(&fdRead, &fdWrite, &fdError, &maxFd);
+        INFO() << maxFd;
+        if (maxFd == -1) {
+            QThread::msleep(timeout);
+            INFO() << "Sleeping for: " << timeout;
+        } else {
+            timeVal.tv_sec = timeout / 1000;
+            timeVal.tv_usec = (timeout % 1000 ) * 1000;
+            select(maxFd + 1, &fdRead, &fdWrite, &fdError, &timeVal);
+        }
+        procSlave->execute();
+
+    } while(protocolSlave->active());
+
+    QVERIFY(procSlave->remove(protocolSlave.data()));
+
+    QByteArray data = protocolSlave->responseData();
+    QStringList headers = protocolSlave->responseHeader();
+    uint16_t code = protocolSlave->responseCode();
+
+    QCOMPARE(QString(data), "Some data for ProcessorSlave");
+    QCOMPARE(headers.size(), 8);
+    QCOMPARE(code, 200);
+
 }
 
 void HttpTest::cleanupTestCase()

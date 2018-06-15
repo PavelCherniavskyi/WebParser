@@ -14,6 +14,7 @@ HttpJob::~HttpJob()
 
 bool HttpJob::execute()
 {
+    INFO() << "mProcessorSlaves size: " << mProcessorSlaves.size();
     curlSelect();
 
     for (auto &processor : mProcessorSlaves) {
@@ -37,6 +38,8 @@ void HttpJob::setId(int32_t id)
 
 void HttpJob::curlSelect()
 {
+    INFO() << "mProcessorSlaves size: " << mProcessorSlaves.size();
+
     const int64_t defaultTimeoutMs = 200;
 
     int64_t timeoutMs = defaultTimeoutMs;
@@ -76,6 +79,7 @@ void HttpJob::curlSelect()
         timeoutMs = std::min(timeoutMs, defaultTimeoutMs);
     }
 
+    INFO() << "maxFd: " << maxFd;
     if (timeoutMs) {
         if (-1 == maxFd) {
             // no file descriptors are set by libCurl, sleep for the select timeout
