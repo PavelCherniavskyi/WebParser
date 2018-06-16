@@ -2,7 +2,7 @@
 #include "../../../SmartLogger/src/SmartLogger.h"
 #include "../../../DownloadManager/src/DownloadManager.h"
 
-ProtocolMaster::ProtocolMaster(IDownloadManager *sender, int32_t id, QObject *obj) : QObject(obj)
+ProtocolMaster::ProtocolMaster(IDownloadManager *sender, int32_t id, QObject *obj) : IProtocolMaster(obj)
     , mId(id)
     , mProtocolSlave(id)
     , mRequestSender(sender)

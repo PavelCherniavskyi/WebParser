@@ -1,3 +1,4 @@
+#include <QSignalSpy>
 #include "HttpTest.h"
 #include "JobExecutor.h"
 #include "../src/private/ProtocolSlave.h"
@@ -14,7 +15,7 @@ void ProcessorMasterMock::jobExecuted()
 
 }
 
-void ProcessorMasterMock::addProtocolToProcessing(ProtocolMaster *protocol)
+void ProcessorMasterMock::addProtocolToProcessing(IProtocolMaster *protocol)
 {
     if(protocol){
         mProtocolMasters.push_back(protocol);
@@ -22,7 +23,7 @@ void ProcessorMasterMock::addProtocolToProcessing(ProtocolMaster *protocol)
 
 }
 
-void ProcessorMasterMock::removeProtocolFromProcessing(ProtocolMaster *protocol)
+void ProcessorMasterMock::removeProtocolFromProcessing(IProtocolMaster *protocol)
 {
     if (protocol) {
         auto iter = std::find(mProtocolMasters.begin(), mProtocolMasters.end(), protocol);
@@ -32,19 +33,31 @@ void ProcessorMasterMock::removeProtocolFromProcessing(ProtocolMaster *protocol)
 
 void ProcessorExecutorMock::addProcessorToExecution(ProcessorMaster *processor)
 {
-    //processor->slave()->execute();
+    if(processor) {
+        mProcessorMasters.append(processor);
+    }
+
 }
 
 void ProcessorExecutorMock::removeProcessorFromExecution(ProcessorMaster *processor)
 {
-
+    if (processor) {
+        auto iter = std::find(mProcessorMasters.begin(), mProcessorMasters.end(), processor);
+        mProcessorMasters.erase(iter);
+    }
 }
 
 void ProcessorExecutorMock::handleJobExecuted()
 {
-//    for (auto &processorMaster : mProcessorMasters) {
-//        processorMaster->jobExecuted();
-//    }
+}
+
+
+bool ProtocolMasterMock::sendRequest(const QString &url, int port)
+{
+}
+
+void ProtocolMasterMock::jobExecuted()
+{
 }
 
 void HttpTest::initTestCase()
@@ -153,6 +166,33 @@ void HttpTest::processorSlaveTest()
 
 }
 
+void HttpTest::processorMasterTest()
+{
+    ProtocolMasterMock *protocol = new ProtocolMasterMock(55, this);
+    ProcessorMaster *processorMaster = new ProcessorMaster(55, this);
+    ProcessorExecutorMock *executor = new ProcessorExecutorMock(this);
+    QSignalSpy spy(processorMaster, &ProcessorMaster::protocolProcessingFinished);
+    connect(processorMaster, &ProcessorMaster::addProcessorToExecution,      executor, &ProcessorExecutorMock::addProcessorToExecution     );
+    connect(processorMaster, &ProcessorMaster::removeProcessorFromExecution, executor, &ProcessorExecutorMock::removeProcessorFromExecution);
+
+    processorMaster->addProtocolToProcessing(protocol);
+    QCOMPARE(executor->getProcessorMasters().size(), 1);
+
+    processorMaster->jobExecuted();
+    QVERIFY(processorMaster->isActive());
+
+    processorMaster->removeProtocolFromProcessing(protocol);
+    QCOMPARE(spy.count(), 1);
+    QList<QVariant> arguments = spy.takeFirst();
+
+    QCOMPARE(arguments.at(0).toInt(), 55);
+
+    processorMaster->jobExecuted();
+    QVERIFY(executor->getProcessorMasters().empty());
+    QVERIFY(!processorMaster->isActive());
+}
+
 void HttpTest::cleanupTestCase()
 {
 }
+

@@ -10,23 +10,37 @@
 
 class Http;
 class IDownloadManager;
+class ProtocolMaster;
 
-class ProtocolMaster : public QObject
+class IProtocolMaster : public QObject
 {
     Q_OBJECT
 public:
-    explicit ProtocolMaster(IDownloadManager *sender, int32_t id, QObject *obj = 0);
-    virtual ~ProtocolMaster();
-    int32_t id() const;
-    ProtocolSlave *slave();
-    bool sendRequest(const QString &url, int port = 80);
+    IProtocolMaster(QObject *obj = 0) : QObject(obj){}
+    virtual int32_t id() const = 0;
+    virtual bool sendRequest(const QString &url, int port = 80) = 0;
+    virtual ProtocolSlave *slave() = 0;
 
 signals:
     void addProtocolToProcessing(ProtocolMaster *protocol);
     void removeProtocolFromProcessing(ProtocolMaster *protocol);
 
 public slots:
-    void jobExecuted();
+    virtual void jobExecuted() = 0;
+};
+
+class ProtocolMaster : public IProtocolMaster
+{
+    Q_OBJECT
+public:
+    explicit ProtocolMaster(IDownloadManager *sender, int32_t id, QObject *obj = 0);
+    virtual ~ProtocolMaster();
+    int32_t id() const override;
+    ProtocolSlave *slave() override;
+    bool sendRequest(const QString &url, int port = 80) override;
+
+public slots:
+    void jobExecuted() override;
 
 private:
     ProtocolMaster();

@@ -6,7 +6,7 @@
 #include "../HttpEnums.h"
 #include "ProcessorSlave.h"
 
-class ProtocolMaster;
+class IProtocolMaster;
 class ProcessorMaster;
 
 class IProcessorMaster : public QObject
@@ -22,8 +22,8 @@ signals:
     void protocolProcessingFinished(qint32 id);
 
 public slots:
-    virtual void addProtocolToProcessing(ProtocolMaster *protocol) = 0;
-    virtual void removeProtocolFromProcessing(ProtocolMaster *protocol) = 0;
+    virtual void addProtocolToProcessing(IProtocolMaster *protocol) = 0;
+    virtual void removeProtocolFromProcessing(IProtocolMaster *protocol) = 0;
 };
 
 class ProcessorMaster : public IProcessorMaster
@@ -34,11 +34,12 @@ public:
     ~ProcessorMaster();
     ProcessorSlave *slave();
     void jobExecuted() override;
+    uint32_t isActive();
     uint32_t Id();
 
 public slots:
-    void addProtocolToProcessing(ProtocolMaster *protocol) override;
-    void removeProtocolFromProcessing(ProtocolMaster *protocol) override;
+    void addProtocolToProcessing(IProtocolMaster *protocol) override;
+    void removeProtocolFromProcessing(IProtocolMaster *protocol) override;
 
 private:
     ProcessorMaster();
@@ -47,8 +48,8 @@ private:
 
     uint32_t       mId;
     bool           mActive;
-    QVector<ProtocolMaster *> mProtocolMastersAdd;
+    QVector<IProtocolMaster *> mProtocolMastersAdd;
     ProcessorSlave mProcessorSlave;
-    QVector<ProtocolMaster *> mProtocolMasters;
+    QVector<IProtocolMaster *> mProtocolMasters;
 };
 

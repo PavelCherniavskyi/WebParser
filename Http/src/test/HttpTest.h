@@ -4,6 +4,8 @@
 #include "ExpressServer.h"
 #include "../src/private/ProcessorMaster.h"
 #include "../src/private/ProcessorExecutor.h"
+#include "../src/private/ProtocolMaster.h"
+#include "../src/private/ProtocolSlave.h"
 
 class DownloadManagerMock : public IDownloadManager
 {
@@ -25,12 +27,12 @@ public:
     void jobExecuted() override;
 
 public slots:
-    void addProtocolToProcessing(ProtocolMaster *protocol) override;
-    void removeProtocolFromProcessing(ProtocolMaster *protocol) override;
-    inline QVector<ProtocolMaster *> getProtocolMasters() { return mProtocolMasters; }
+    void addProtocolToProcessing(IProtocolMaster *protocol) override;
+    void removeProtocolFromProcessing(IProtocolMaster *protocol) override;
+    inline QVector<IProtocolMaster *> getProtocolMasters() { return mProtocolMasters; }
 
 private:
-    QVector<ProtocolMaster *> mProtocolMasters;
+    QVector<IProtocolMaster *> mProtocolMasters;
 };
 
 class ProcessorExecutorMock : public IProcessorExecutor
@@ -38,11 +40,35 @@ class ProcessorExecutorMock : public IProcessorExecutor
     Q_OBJECT
 public:
     ProcessorExecutorMock(QObject *obj = 0) : IProcessorExecutor(obj) {}
+    inline QVector<ProcessorMaster *> getProcessorMasters() { return mProcessorMasters; }
 
 public slots:
     void addProcessorToExecution(ProcessorMaster *processor) override;
     void removeProcessorFromExecution(ProcessorMaster *processor) override;
     void handleJobExecuted() override;
+private:
+    QVector<ProcessorMaster *> mProcessorMasters;
+};
+
+class ProtocolMasterMock : public IProtocolMaster
+{
+    Q_OBJECT
+public:
+    ProtocolMasterMock(int32_t id, QObject *obj = 0) : IProtocolMaster(obj)
+      , mId(id)
+      , mProtocolSlave(id)
+    {
+    }
+    bool sendRequest(const QString &url, int port = 80) override;
+    inline int32_t id() const override { return mId; }
+    inline ProtocolSlave *slave() override { return &mProtocolSlave; }
+
+public slots:
+    void jobExecuted() override;
+
+private:
+    int32_t       mId;
+    ProtocolSlave mProtocolSlave;
 };
 
 class HttpTest : public QObject
@@ -54,6 +80,7 @@ private slots:
     void protocolSlaveTest();
     void protocolMasterTest();
     void processorSlaveTest();
+    void processorMasterTest();
     void cleanupTestCase();
 
 private:
