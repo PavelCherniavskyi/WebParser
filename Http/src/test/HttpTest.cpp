@@ -119,50 +119,69 @@ void HttpTest::protocolMasterTest()
 
 void HttpTest::processorSlaveTest()
 {
-    QScopedPointer<ProcessorSlave> procSlave(new ProcessorSlave(77));
-    QScopedPointer<ProtocolSlave> protocolSlave(new ProtocolSlave(66));
-    protocolSlave->setPort(3000);
-    protocolSlave->setUrl("http://localhost/processorslave");
+//    const int numRequests = 5;
+//    QScopedPointer<ProcessorSlave> procSlave(new ProcessorSlave(77));
+//    QVector<QScopedPointer<ProtocolSlave>> protocolSlaves = {
+//        new ProtocolSlave(66),
+//        new ProtocolSlave(67),
+//        new ProtocolSlave(68),
+//        new ProtocolSlave(69),
+//        new ProtocolSlave(70)
+//    };
 
-    QVERIFY(procSlave->add(protocolSlave.data()));
+//    for(int i = 0; i < numRequests; ++i){
+//        protocolSlaves[i]->setPort(3000);
+//        protocolSlaves[i]->setUrl("http://localhost/processorslave");
+//        QVERIFY(procSlave->add(protocolSlaves[i].data()));
+//    }
 
-    fd_set fdRead, fdWrite, fdError;
-    struct timeval timeVal;
-    int maxFd = -1;
-    int64_t timeout;
+//    fd_set fdRead, fdWrite, fdError;
+//    struct timeval timeVal;
+//    int maxFd = -1;
+//    const int64_t defaultTimeoutMs = 200;
+//    int64_t timeoutMs = defaultTimeoutMs;
 
-    timeout = procSlave->timeout();
-    procSlave->execute();
+//    for (auto &processor : protocolSlaves) {
+//        int maxFdLocal = -1;
+//        processor->descriptors(&fdRead, &fdWrite, &fdExcep, &maxFd);
+//        maxFd = std::max(maxFd, maxFdLocal);
 
-    do
-    {
-        FD_ZERO(&fdRead);
-        FD_ZERO(&fdWrite);
-        FD_ZERO(&fdError);
+//        int64_t timeoutMsLocal = processor->timeout();
+//        timeoutMs = std::min(timeoutMs, timeoutMsLocal);
+//    }
 
-        procSlave->descriptors(&fdRead, &fdWrite, &fdError, &maxFd);
-        INFO() << maxFd;
-        if (maxFd == -1) {
-            QThread::msleep(timeout);
-            INFO() << "Sleeping for: " << timeout;
-        } else {
-            timeVal.tv_sec = timeout / 1000;
-            timeVal.tv_usec = (timeout % 1000 ) * 1000;
-            select(maxFd + 1, &fdRead, &fdWrite, &fdError, &timeVal);
-        }
-        procSlave->execute();
+//    timeout = procSlave->timeout();
+//    procSlave->execute();
 
-    } while(protocolSlave->active());
+//    do
+//    {
+//        FD_ZERO(&fdRead);
+//        FD_ZERO(&fdWrite);
+//        FD_ZERO(&fdError);
 
-    QVERIFY(procSlave->remove(protocolSlave.data()));
+//        procSlave->descriptors(&fdRead, &fdWrite, &fdError, &maxFd);
+//        INFO() << maxFd;
+//        if (maxFd == -1) {
+//            QThread::msleep(timeout);
+//            INFO() << "Sleeping for: " << timeout;
+//        } else {
+//            timeVal.tv_sec = timeout / 1000;
+//            timeVal.tv_usec = (timeout % 1000 ) * 1000;
+//            select(maxFd + 1, &fdRead, &fdWrite, &fdError, &timeVal);
+//        }
+//        procSlave->execute();
 
-    QByteArray data = protocolSlave->responseData();
-    QStringList headers = protocolSlave->responseHeader();
-    uint16_t code = protocolSlave->responseCode();
+//    } while(protocolSlave->active());
 
-    QCOMPARE(QString(data), "Some data for ProcessorSlave");
-    QCOMPARE(headers.size(), 8);
-    QCOMPARE(code, 200);
+//    QVERIFY(procSlave->remove(protocolSlave.data()));
+
+//    QByteArray data = protocolSlave->responseData();
+//    QStringList headers = protocolSlave->responseHeader();
+//    uint16_t code = protocolSlave->responseCode();
+
+//    QCOMPARE(QString(data), "Some data for ProcessorSlave");
+//    QCOMPARE(headers.size(), 8);
+//    QCOMPARE(code, 200);
 
 }
 

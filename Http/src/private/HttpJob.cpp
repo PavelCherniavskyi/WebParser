@@ -4,7 +4,7 @@
 #include "ProcessorSlave.h"
 #include <QThread>
 
-HttpJob::HttpJob(const QVector<ProcessorSlave *> &processorSlaves) : mProcessorSlaves(processorSlaves)
+HttpJob::HttpJob(ProcessorSlave *processorSlave) : mProcessorSlave(processorSlave)
 {
 }
 
@@ -14,12 +14,9 @@ HttpJob::~HttpJob()
 
 bool HttpJob::execute()
 {
-    INFO() << "mProcessorSlaves size: " << mProcessorSlaves.size();
     curlSelect();
 
-    for (auto &processor : mProcessorSlaves) {
-        processor->execute();
-    }
+    mProcessorSlave->execute();
 
     emit jobExecuted();
 
@@ -38,8 +35,6 @@ void HttpJob::setId(int32_t id)
 
 void HttpJob::curlSelect()
 {
-    INFO() << "mProcessorSlaves size: " << mProcessorSlaves.size();
-
     const int64_t defaultTimeoutMs = 200;
 
     int64_t timeoutMs = defaultTimeoutMs;
@@ -55,16 +50,16 @@ void HttpJob::curlSelect()
     FD_ZERO(&fdWrite);
     FD_ZERO(&fdExcep);
 
-    for (auto &processor : mProcessorSlaves) {
-        // get file descriptors
-        int maxFdLocal = -1;
-        processor->descriptors(&fdRead, &fdWrite, &fdExcep, &maxFd);
-        maxFd = std::max(maxFd, maxFdLocal);
+    // For proactive work
+    //Removed vector of processor slaves cause it is only one ProcessorSlave that we need with multihandle
+    //It already contains all ProtocolSlaves with easyHandle.
 
-        // get timeout
-        int64_t timeoutMsLocal = processor->timeout();
-        timeoutMs = std::min(timeoutMs, timeoutMsLocal);
-    }
+    int maxFdLocal = -1;
+    mProcessorSlave->descriptors(&fdRead, &fdWrite, &fdExcep, &maxFd);
+    maxFd = std::max(maxFd, maxFdLocal);
+
+    int64_t timeoutMsLocal = mProcessorSlave->timeout();
+    timeoutMs = std::min(timeoutMs, timeoutMsLocal);
 
     // check whether the select timeout returned by libCurl is valid
     if (-1 == timeoutMs) {

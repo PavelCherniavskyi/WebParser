@@ -12,7 +12,7 @@ class HttpJob : public Job
 {
     Q_OBJECT
 public:
-    HttpJob(const QVector<ProcessorSlave *>& processorSlaves);
+    HttpJob(ProcessorSlave *processorSlave);
     ~HttpJob();
     bool execute();
     int32_t id() const;
@@ -20,7 +20,7 @@ public:
 
 private:
     void curlSelect();
-    QVector<ProcessorSlave *> mProcessorSlaves;
+    ProcessorSlave *mProcessorSlave;
     int32_t     mId;
 };
 

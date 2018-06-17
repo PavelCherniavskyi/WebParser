@@ -6,6 +6,7 @@
 #include <QDateTime>
 #include <QLoggingCategory>
 #include <QMetaEnum>
+#include <QMutex>
 
 class Provisioning;
 
@@ -51,12 +52,13 @@ public slots:
 private:
     QTextStream *linker(QString str);
 
-    static QSharedPointer<QTextStream> stream;
-    static QSharedPointer<QFile> m_logFile;
+    static QScopedPointer<QTextStream> stream;
+    static QScopedPointer<QFile> m_logFile;
     static QTextStream m_logOut;
     static QTextStream m_console;
     static LOGWAY m_logWay;
     static QString m_logFilePath;
+    static QMutex mutex;
     QString m_buffer;
     QString m_file;
     qint16 m_line;

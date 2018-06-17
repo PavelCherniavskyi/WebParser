@@ -30,16 +30,9 @@ bool ProcessorExecutor::executeProcessorSlaves()
     INFO() << "mProcessorMasters: " << mProcessorMasters.size();
     bool executing = false;
 
-    QVector<ProcessorSlave *> processorSlaves;
-
     if (!mProcessorMasters.empty()) {
-        for(auto processorMaster : mProcessorMasters) {
-            processorSlaves.push_back(processorMaster->slave());
-        }
 
-        INFO() << "Size of processorSlaves: " << processorSlaves.size();
-
-        QSharedPointer<HttpJob> job(new HttpJob(processorSlaves), &QObject::deleteLater);
+        QSharedPointer<HttpJob> job(new HttpJob(mProcessorMasters[0]->slave()), &QObject::deleteLater);
         connect(job.data(), &HttpJob::jobExecuted, this, &ProcessorExecutor::handleJobExecuted);
         mHttpJobExecutor->execute(job, true);
 

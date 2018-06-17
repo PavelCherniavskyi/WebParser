@@ -53,8 +53,8 @@ uint32_t ProcessorMaster::Id()
 
 void ProcessorMaster::addProtocolToProcessing(IProtocolMaster *protocol)
 {
-    INFO() << protocol->id();
     if (protocol) {
+        INFO() << mActive << " " << mProtocolMastersAdd.size() << " " << mProtocolMasters.size();
         mProtocolMastersAdd.push_back(protocol);
 
         if (!mActive) {

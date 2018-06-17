@@ -1,19 +1,20 @@
 #include "../SmartLogger.h"
 #include "../Provisioning/src/Provisioning.h"
 
-QSharedPointer<QFile> SmartLogger::m_logFile;
-QSharedPointer<QTextStream> SmartLogger::stream;
+QScopedPointer<QFile> SmartLogger::m_logFile;
+QScopedPointer<QTextStream> SmartLogger::stream;
 QTextStream SmartLogger::m_logOut;
 QTextStream SmartLogger::m_console(stdout);
 SmartLogger::LOGWAY SmartLogger::m_logWay           = SmartLogger::LOGWAY::LogToStdOut;
 QString SmartLogger::m_logFilePath                  = "log_file.txt";
-
+QMutex SmartLogger::mutex;
 
 SmartLogger::SmartLogger(const char *file, const char *function, int line)
     : m_file(file)
     , m_line(line)
     , m_function(function)
 {
+    mutex.lock();
     stream.reset(new QTextStream(&m_buffer, QIODevice::ReadWrite));
 }
 
@@ -32,6 +33,7 @@ SmartLogger::~SmartLogger()
         m_console << m_buffer;
         m_console.flush();
     }
+    mutex.unlock();
 }
 
 void SmartLogger::init(Provisioning *prov)
