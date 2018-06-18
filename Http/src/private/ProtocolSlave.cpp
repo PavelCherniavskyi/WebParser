@@ -142,11 +142,11 @@ ProtocolSlave::~ProtocolSlave()
 
     curl_easy_cleanup(mEasyHandle);
 
-    mEasyHandle = 0;
+    mEasyHandle = nullptr;
 }
 
 //--------------------------------------------------------------------------------------------------
-int32_t ProtocolSlave::id() const
+int ProtocolSlave::id() const
 //--------------------------------------------------------------------------------------------------
 {
     return mId;

@@ -9,11 +9,11 @@ class JobMock : public Job
 public:
     JobMock();
     bool execute() override;
-    inline quint8 calls() { return callNumber; }
+    inline int calls() { return callNumber; }
 
 private:
     QVector<bool> executeCalls;
-    quint8 callNumber;
+    int callNumber;
 };
 
 class UtilsTest : public QObject

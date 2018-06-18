@@ -10,8 +10,8 @@
 class DownloadManagerMock : public IDownloadManager
 {
 public:
-    DownloadManagerMock(QObject *obj = 0) : IDownloadManager(obj) {}
-    void execute() {}
+    DownloadManagerMock(QObject *obj = nullptr) : IDownloadManager(obj) {}
+    void execute() override {}
     void setResponseData(const ResponseDataParams value) override;
     inline QVector<ResponseDataParams> getResponseData() { return responseHandlers; }
 
@@ -39,7 +39,7 @@ class ProcessorExecutorMock : public IProcessorExecutor
 {
     Q_OBJECT
 public:
-    ProcessorExecutorMock(QObject *obj = 0) : IProcessorExecutor(obj) {}
+    ProcessorExecutorMock(QObject *obj = nullptr) : IProcessorExecutor(obj) {}
     inline QVector<ProcessorMaster *> getProcessorMasters() { return mProcessorMasters; }
 
 public slots:
@@ -54,12 +54,12 @@ class ProtocolMasterMock : public IProtocolMaster
 {
     Q_OBJECT
 public:
-    ProtocolMasterMock(int32_t id, QObject *obj = 0) : IProtocolMaster(obj)
+    ProtocolMasterMock(int32_t id, QObject *obj = nullptr) : IProtocolMaster(obj)
       , mId(id)
       , mProtocolSlave(id)
     {
     }
-    bool sendRequest(const QString &url, int port = 80) override;
+    bool sendRequest(const QString &url, uint32_t port = 80) override;
     inline int32_t id() const override { return mId; }
     inline ProtocolSlave *slave() override { return &mProtocolSlave; }
 

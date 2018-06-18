@@ -32,7 +32,7 @@ ProtocolSlave *ProtocolMaster::slave()
     return &mProtocolSlave;
 }
 
-bool ProtocolMaster::sendRequest(const QString &url, int port)
+bool ProtocolMaster::sendRequest(const QString &url, uint32_t port)
 {
     bool success = false;
 

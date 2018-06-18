@@ -12,7 +12,7 @@ class ProtocolSlave : public QObject
 public:
     explicit ProtocolSlave(const int32_t id);
     ~ProtocolSlave();
-    int32_t         id() const;
+    int         id() const;
     void            processExecutionResult(const CURLcode executionResult);
     void            setUrl(const QString &url);
     void            setTimeout(const uint32_t ms);
@@ -38,7 +38,7 @@ private:
     static int      curlDebugDispatcherCallback(CURL *curl, curl_infotype infoType, char *text, size_t size, void *data);
     int32_t         curlDebugCallback(CURL *curl, curl_infotype infoType, char *text, size_t size);
 
-    const int32_t            mId;
+    const int            mId;
     CURL*                    mEasyHandle;
     bool                     mActive;
     CURLcode                 mResult;

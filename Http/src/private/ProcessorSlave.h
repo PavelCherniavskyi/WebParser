@@ -10,9 +10,9 @@ class ProtocolSlave;
 class ProcessorSlave
 {
 public:
-    explicit ProcessorSlave(int32_t id);
+    explicit ProcessorSlave(uint32_t id);
     virtual ~ProcessorSlave();
-    int32_t id() const;
+    uint32_t id() const;
     int64_t timeout() const;
     void descriptors(fd_set *fdread, fd_set *fdwrite, fd_set *fdexcep, int32_t *maxfd) const;
     CURLM* getMultiHandle();
@@ -22,7 +22,7 @@ public:
 
 private:
     ProcessorSlave();
-    int32_t mId;
+    uint32_t mId;
     CURLM  *mMh;
     int32_t mNowRunningProtocols;
     int32_t mLastRunningProtocols;

@@ -2,7 +2,7 @@
 #include "../../../SmartLogger/src/SmartLogger.h"
 #include "ProtocolMaster.h"
 
-ProcessorMaster::ProcessorMaster(int32_t id, QObject *obj) : IProcessorMaster(obj)
+ProcessorMaster::ProcessorMaster(uint32_t id, QObject *obj) : IProcessorMaster(obj)
     , mId(id)
     , mActive(false)
     , mProtocolMastersAdd()
@@ -24,7 +24,7 @@ ProcessorSlave *ProcessorMaster::slave()
 
 void ProcessorMaster::jobExecuted()
 {
-    INFO() << mActive;
+    INFO() << "mActive: " << mActive << "mProtocolMasters size: " << mProtocolMasters.size();
     if (mActive) {
 
         //use reverse iterator as protocols might be erased inside the loop
@@ -63,9 +63,6 @@ void ProcessorMaster::addProtocolToProcessing(IProtocolMaster *protocol)
             emit addProcessorToExecution(this);
             mActive = true;
 
-//            for (auto &protocol : mProtocolMasters) {  -- do this mark in proactive note.
-//                protocol->jobExecuted();
-//            }
         }
     } else {
         WARN() << "[" << mId << "] protocol is null!";

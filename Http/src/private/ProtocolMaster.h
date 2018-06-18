@@ -16,9 +16,9 @@ class IProtocolMaster : public QObject
 {
     Q_OBJECT
 public:
-    IProtocolMaster(QObject *obj = 0) : QObject(obj){}
+    IProtocolMaster(QObject *obj = nullptr) : QObject(obj){}
     virtual int32_t id() const = 0;
-    virtual bool sendRequest(const QString &url, int port = 80) = 0;
+    virtual bool sendRequest(const QString &url, uint32_t port = 80) = 0;
     virtual ProtocolSlave *slave() = 0;
 
 signals:
@@ -33,11 +33,11 @@ class ProtocolMaster : public IProtocolMaster
 {
     Q_OBJECT
 public:
-    explicit ProtocolMaster(IDownloadManager *sender, int32_t id, QObject *obj = 0);
-    virtual ~ProtocolMaster();
+    explicit ProtocolMaster(IDownloadManager *sender, int32_t id, QObject *obj = nullptr);
+    virtual ~ProtocolMaster() override;
     int32_t id() const override;
     ProtocolSlave *slave() override;
-    bool sendRequest(const QString &url, int port = 80) override;
+    bool sendRequest(const QString &url, uint32_t port = 80) override;
 
 public slots:
     void jobExecuted() override;

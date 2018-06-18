@@ -13,7 +13,7 @@ class IProcessorMaster : public QObject
 {
     Q_OBJECT
 public:
-    IProcessorMaster(QObject *obj = 0) : QObject(obj) {}
+    IProcessorMaster(QObject *obj = nullptr) : QObject(obj) {}
     virtual void jobExecuted() = 0;
 
 signals:
@@ -30,8 +30,8 @@ class ProcessorMaster : public IProcessorMaster
 {
     Q_OBJECT
 public:
-    explicit ProcessorMaster(int32_t id, QObject *obj = 0);
-    ~ProcessorMaster();
+    explicit ProcessorMaster(uint32_t id, QObject *obj = nullptr);
+    ~ProcessorMaster() override;
     ProcessorSlave *slave();
     void jobExecuted() override;
     uint32_t isActive();

@@ -14,12 +14,12 @@ Job::~Job()
     // do nothing
 }
 
-void Job::setId(quint32 id)
+void Job::setId(int id)
 {
     mId = id;
 }
 
-quint32 Job::id() const
+int Job::id() const
 {
     return mId;
 }

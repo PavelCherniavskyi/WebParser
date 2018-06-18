@@ -6,7 +6,7 @@
 #include <QStringList>
 #include <QDir>
 
-quint32 JobId = 99;
+int JobId = 99;
 
 JobMock::JobMock()
 {

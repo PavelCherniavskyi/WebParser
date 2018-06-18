@@ -22,10 +22,10 @@ public:
 
 signals:
     void executeJob();
-    void jobIsDone(quint32 id);
+    void jobIsDone(int id);
 
 private slots:
-    void executionCompleted(quint32 id);
+    void executionCompleted(int id);
 
 private:
     JobExecutor(const JobExecutor & rhs) = delete;              ///< no copy
@@ -33,7 +33,7 @@ private:
 
     QList<QSharedPointer<Job>>      mActiveJobs;
     QThread                         mWorkerThread;
-    int32_t                         mNewId;
+    int                             mNewId;
     bool                            mPrintDebugInfo;
 };
 

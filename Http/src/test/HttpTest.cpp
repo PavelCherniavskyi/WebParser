@@ -52,8 +52,9 @@ void ProcessorExecutorMock::handleJobExecuted()
 }
 
 
-bool ProtocolMasterMock::sendRequest(const QString &url, int port)
+bool ProtocolMasterMock::sendRequest(const QString &url, uint32_t port)
 {
+    return  true;
 }
 
 void ProtocolMasterMock::jobExecuted()

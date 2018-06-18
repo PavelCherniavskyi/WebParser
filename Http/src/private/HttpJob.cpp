@@ -50,10 +50,6 @@ void HttpJob::curlSelect()
     FD_ZERO(&fdWrite);
     FD_ZERO(&fdExcep);
 
-    // For proactive work
-    //Removed vector of processor slaves cause it is only one ProcessorSlave that we need with multihandle
-    //It already contains all ProtocolSlaves with easyHandle.
-
     int maxFdLocal = -1;
     mProcessorSlave->descriptors(&fdRead, &fdWrite, &fdExcep, &maxFd);
     maxFd = std::max(maxFd, maxFdLocal);
@@ -79,7 +75,7 @@ void HttpJob::curlSelect()
         if (-1 == maxFd) {
             // no file descriptors are set by libCurl, sleep for the select timeout
             // returned by libCurl or the default one
-            QThread::msleep(timeoutMs);
+            QThread::msleep(static_cast<unsigned long>(timeoutMs));
         } else {
             // there are file descriptors set by libCurl, select on them
             selectTimeout.tv_sec = timeoutMs / 1000;

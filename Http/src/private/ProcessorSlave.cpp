@@ -5,7 +5,7 @@
 const int64_t defaultLibcurlSocketTimeoutMs = 1000;
 
 //--------------------------------------------------------------------------------------------------
-ProcessorSlave::ProcessorSlave(int32_t id)
+ProcessorSlave::ProcessorSlave(uint32_t id)
 //--------------------------------------------------------------------------------------------------
     : mId(id)
     , mMh(nullptr)
@@ -23,7 +23,7 @@ ProcessorSlave::~ProcessorSlave()
     mMh = nullptr;
 }
 
-int32_t ProcessorSlave::id() const
+uint32_t ProcessorSlave::id() const
 {
     return mId;
 }

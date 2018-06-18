@@ -9,16 +9,16 @@ class Job : public QObject
 {
     Q_OBJECT
 public:
-    explicit Job(QObject *obj = 0);
+    explicit Job(QObject *obj = nullptr);
     virtual ~Job();
-    void setId(quint32 id);
-    quint32 id() const;
+    void setId(int id);
+    int id() const;
     const QString &name();
     virtual bool execute() = 0;
 
 signals:
     void continueExecution();
-    void executionCompleted(quint32 id);
+    void executionCompleted(int id);
     void jobExecuted();
 
 public slots:
@@ -28,6 +28,6 @@ private:
     Job(const Job & rhs) = delete;              ///< no copy
     Job &operator=(const Job &rhs) = delete;    ///< no assignment
 
-    quint32     mId;
+    int     mId;
     bool        mPrintDebugInfo;
 };

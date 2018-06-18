@@ -19,7 +19,7 @@ Http::~Http()
 
 void Http::init(Provisioning *prov)
 {
-    (void*)prov; //for future
+    (void)prov; //for future
     mLibCurlConfig.init();
 }
 
@@ -43,7 +43,7 @@ void Http::sendRequest(DownloadManager *sender, const QString &url)
 
 void Http::protocolProcessingFinished(qint32 id)
 {
-    INFO() << "Id: " << id;
+    INFO() << "Id:  " << id;
     auto iter = std::find_if(mProtocolMasters.begin(), mProtocolMasters.end()
                              , [id](QSharedPointer<ProtocolMaster> proto)
                                {return proto->id() == id;});

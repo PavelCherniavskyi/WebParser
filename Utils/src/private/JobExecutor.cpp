@@ -52,7 +52,7 @@ void JobExecutor::execute(QSharedPointer<Job> job, bool printDebugInfo)
 }
 
 //--------------------------------------------------------------------------------------------------
-void JobExecutor::executionCompleted(quint32 id)
+void JobExecutor::executionCompleted(int id)
 //--------------------------------------------------------------------------------------------------
 {
     foreach(QSharedPointer<Job> job, mActiveJobs) {
