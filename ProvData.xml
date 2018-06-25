@@ -14,5 +14,6 @@
         <logtofile>false</logtofile>
         <logtostdout>true</logtostdout>
         <filePath>logFile.txt</filePath>
+        <dltenable>true</dltenable>
     </smartlogger>
 </provdata>

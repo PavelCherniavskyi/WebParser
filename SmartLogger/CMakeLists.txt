@@ -3,15 +3,19 @@ cmake_minimum_required(VERSION 2.8.12)
 project(SmartLogger)
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Test REQUIRED)
+find_package(PkgConfig)
+
+pkg_check_modules(DLT REQUIRED automotive-dlt)
 
 set(SOURCE
         src/SmartLogger.h
         src/private/SmartLogger.cpp
+        ${DLT_INCLUDE_DIRS}
 )
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE})
 
-target_link_libraries(${PROJECT_NAME} Qt5::Core)
+target_link_libraries(${PROJECT_NAME} Qt5::Core ${DLT_LIBRARIES})
 target_include_directories(${PROJECT_NAME} INTERFACE src/)
 
 #Tests =================

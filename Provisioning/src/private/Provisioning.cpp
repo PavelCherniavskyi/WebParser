@@ -85,6 +85,11 @@ bool Provisioning::getProvisioning(QString path)
         query.evaluateTo(&smartProvData.logFilePath);
         smartProvData.logFilePath.remove(smartProvData.logFilePath.size() - 1, 1);
 
+        query.setQuery("provdata/smartlogger/dltenable/text()");
+        query.evaluateTo(&temp);
+        bool isDLTEnabled = (temp.toUpper() == "TRUE");
+        smartProvData.isDLTEnabled = isDLTEnabled;
+
         provData.close();
 
         emit onDownloadMngrDataRecieved(downloadProvData);

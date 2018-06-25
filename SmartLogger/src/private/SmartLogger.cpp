@@ -8,6 +8,7 @@ QTextStream SmartLogger::m_console(stdout);
 SmartLogger::LOGWAY SmartLogger::m_logWay           = SmartLogger::LOGWAY::LogToStdOut;
 QString SmartLogger::m_logFilePath                  = "log_file.txt";
 QMutex SmartLogger::mutex;
+bool SmartLogger::isDLTEnabled;
 
 SmartLogger::SmartLogger(const char *file, const char *function, int line)
     : m_file(file)
@@ -61,6 +62,11 @@ void SmartLogger::OnProvDataReceived(SmartLogger::ProvData provData)
             m_console.flush();
         }
     }
+
+    isDLTEnabled = provData.isDLTEnabled;
+    if(isDLTEnabled){
+        startDLTDeamon();
+    }
 }
 
 QTextStream* SmartLogger::linker(QString logTypeStr)
@@ -71,6 +77,11 @@ QTextStream* SmartLogger::linker(QString logTypeStr)
     (*stream.data()) << logTypeStr;
     (*stream.data()) << m_file << "::"<< m_function << "  ";
     return stream.data();
+}
+
+void SmartLogger::startDLTDeamon()
+{
+
 }
 
 QTextStream* SmartLogger::info()

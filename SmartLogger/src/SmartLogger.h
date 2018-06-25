@@ -37,6 +37,7 @@ public:
     {
         LOGWAY logWay;
         QString logFilePath;
+        bool isDLTEnabled;
     };
     SmartLogger(const char *file, const char *function, int line);
     ~SmartLogger();
@@ -51,6 +52,7 @@ public slots:
 
 private:
     QTextStream *linker(QString str);
+    static void startDLTDeamon();
 
     static QScopedPointer<QTextStream> stream;
     static QScopedPointer<QFile> m_logFile;
@@ -59,6 +61,7 @@ private:
     static LOGWAY m_logWay;
     static QString m_logFilePath;
     static QMutex mutex;
+    static bool isDLTEnabled;
     QString m_buffer;
     QString m_file;
     qint16 m_line;

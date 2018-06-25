@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<params>
+    <Http>
+      <url>http://dumskaya.net</url>
+      <headeronly>true</headeronly>
+      <timeout>5</timeout>
+    </Http>
+    <Component>
+      <url>http://odpublic.net</url>
+      <headeronly>false</headeronly>
+      <timeout>10</timeout>
+    </Component>
+</params>
