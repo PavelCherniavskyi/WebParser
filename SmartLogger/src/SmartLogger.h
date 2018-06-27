@@ -7,6 +7,7 @@
 #include <QLoggingCategory>
 #include <QMetaEnum>
 #include <QMutex>
+#include <QProcess>
 
 class Provisioning;
 
@@ -61,7 +62,8 @@ private:
     static LOGWAY m_logWay;
     static QString m_logFilePath;
     static QMutex mutex;
-    static bool isDLTEnabled;
+    static bool m_isDLTEnabled;
+    static QProcess *m_dlt_daemon_proc;
     QString m_buffer;
     QString m_file;
     qint16 m_line;

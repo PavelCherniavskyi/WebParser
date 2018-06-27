@@ -5,8 +5,8 @@
             <timeout>5</timeout>
         </settings>
         <urls>
-<!---->           <url>http://dumskaya.net/</url>
-            <url>http://odpublic.net/</url>
+<!--           <url>http://dumskaya.net/</url>
+            <url>http://odpublic.net/</url>   -->
             <url>http://www.tenet.ua/</url>
         </urls>
     </http>

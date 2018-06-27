@@ -67,11 +67,11 @@ bool Provisioning::getProvisioning(QString path)
         SmartLogger::ProvData smartProvData;
         query.setQuery("provdata/smartlogger/logtofile/text()");
         query.evaluateTo(&temp);
-        bool logTofile = (temp.toUpper() == "TRUE");
+        bool logTofile = (temp.trimmed().toUpper() == "TRUE");
 
         query.setQuery("provdata/smartlogger/logtostdout/text()");
         query.evaluateTo(&temp);
-        bool logToStdout = (temp.toUpper() == "TRUE");
+        bool logToStdout = (temp.trimmed().toUpper() == "TRUE");
 
         if(logTofile && logToStdout) {
             smartProvData.logWay = SmartLogger::LOGWAY::LogBoth;
@@ -87,8 +87,7 @@ bool Provisioning::getProvisioning(QString path)
 
         query.setQuery("provdata/smartlogger/dltenable/text()");
         query.evaluateTo(&temp);
-        bool isDLTEnabled = (temp.toUpper() == "TRUE");
-        smartProvData.isDLTEnabled = isDLTEnabled;
+        smartProvData.isDLTEnabled = (temp.trimmed().toUpper() == "TRUE");
 
         provData.close();
 
