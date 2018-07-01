@@ -1,8 +1,5 @@
 #include "../SmartLogger.h"
 #include "../Provisioning/src/Provisioning.h"
-#include <dlt.h>
-
-DLT_DECLARE_CONTEXT(smart_logger)
 
 QScopedPointer<QFile> SmartLogger::m_logFile;
 QScopedPointer<QTextStream> SmartLogger::stream;
@@ -11,8 +8,6 @@ QTextStream SmartLogger::m_console(stdout);
 SmartLogger::LOGWAY SmartLogger::m_logWay           = SmartLogger::LOGWAY::LogToStdOut;
 QString SmartLogger::m_logFilePath                  = "log_file.txt";
 QMutex SmartLogger::mutex;
-bool SmartLogger::m_isDLTEnabled;
-QProcess *SmartLogger::m_dlt_daemon_proc;
 
 SmartLogger::SmartLogger(const char *file, const char *function, int line)
     : m_file(file)
@@ -66,11 +61,6 @@ void SmartLogger::OnProvDataReceived(SmartLogger::ProvData provData)
             m_console.flush();
         }
     }
-
-    m_isDLTEnabled = provData.isDLTEnabled;
-    if(m_isDLTEnabled){
-        startDLTDeamon();
-    }
 }
 
 QTextStream* SmartLogger::linker(QString logTypeStr)
@@ -81,31 +71,6 @@ QTextStream* SmartLogger::linker(QString logTypeStr)
     (*stream.data()) << logTypeStr;
     (*stream.data()) << m_file << "::"<< m_function << "  ";
     return stream.data();
-}
-
-void SmartLogger::startDLTDeamon()
-{
-//    QFile tcp6("/proc/net/tcp6");
-//    if(!tcp6.open(QIODevice::ReadOnly | QIODevice::Text)) {
-//        WARN() << "Can't open /proc/net/tcp6 ";
-//        return false;
-//    }
-
-//    m_dlt_daemon_proc = new QProcess();
-//    QStringList arguments;
-//    m_dlt_daemon_proc->start("/usr/local/bin/dlt-daemon", arguments);
-//    m_dlt_daemon_proc->waitForStarted(5000);
-    INFO();
-
-
-    DLT_REGISTER_APP("LOG","Test Application for Logging");
-    DLT_REGISTER_CONTEXT(smart_logger,"MYCT", "My Context");
-
-    DLT_LOG(smart_logger, DLT_LOG_INFO, DLT_STRING("Hello world"),DLT_INT(568));
-    sleep(1);
-
-    DLT_UNREGISTER_CONTEXT(smart_logger);
-    DLT_UNREGISTER_APP();
 }
 
 QTextStream* SmartLogger::info()

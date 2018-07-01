@@ -5,6 +5,7 @@
 #include <QSharedPointer>
 
 #include "../../Http/src/HttpTypes.h"
+#include "src/private/Parser.h"
 
 class Http;
 class ResponseHandler;
@@ -29,6 +30,7 @@ public:
     struct ProvData {
         QList<QString> urls;
         uint timeout;
+        QMap<Parser::ParseType, bool> parseTypes;
     };
 
     DownloadManager(QObject *obj = 0);
@@ -46,4 +48,5 @@ private:
     QSharedPointer<Http>                        m_http;
     QVector<ResponseDataParams>                 responseHandlers;
     ProvData                                    mProvData;
+    Parser                                      parser;
 };

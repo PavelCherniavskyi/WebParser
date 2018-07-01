@@ -32,11 +32,12 @@ void DownloadManager::execute()
 
 void DownloadManager::setResponseData(const ResponseDataParams value)
 {
-    INFO() << "Final response data [" << value.id << "]: Bytes: " << value.data.size() << ". Error: " << HttpErrorToText[value.error];
+    INFO() << "Response data [" << value.id << "]: Bytes: " << value.data.size() << ". Error: " << HttpErrorToText[value.error];
     responseHandlers.push_back(value);
 
     if(responseHandlers.size() == mProvData.urls.size()) {
         INFO() << "Execution complete. Got " << responseHandlers.size() << " responses.";
+        parser.doParse(responseHandlers, mProvData.parseTypes);
         emit doneExecution();
     }
 }

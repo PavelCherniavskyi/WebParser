@@ -53,7 +53,6 @@ public slots:
 
 private:
     QTextStream *linker(QString str);
-    static void startDLTDeamon();
 
     static QScopedPointer<QTextStream> stream;
     static QScopedPointer<QFile> m_logFile;
@@ -62,8 +61,6 @@ private:
     static LOGWAY m_logWay;
     static QString m_logFilePath;
     static QMutex mutex;
-    static bool m_isDLTEnabled;
-    static QProcess *m_dlt_daemon_proc;
     QString m_buffer;
     QString m_file;
     qint16 m_line;

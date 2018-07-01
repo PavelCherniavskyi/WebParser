@@ -4,27 +4,6 @@ project(SmartLogger)
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Test REQUIRED)
 
-file(STRINGS ../ProvData.xml provData)
-
-set(DLT_ENABLE OFF)
-foreach(data ${provData})
-    string(FIND ${data} "dltenable" lineIndex)
-    if(lineIndex GREATER 0)
-        string(FIND ${data} "true" index)
-        if(index GREATER 0)
-            set(DLT_ENABLE ON)
-            break()
-        endif()
-    endif()
-endforeach()
-
-message(STATUS "DLT Enabled: " ${DLT_ENABLE})
-
-if(DLT_ENABLE)
-    find_package(PkgConfig)
-    pkg_check_modules(DLT REQUIRED automotive-dlt)
-    add_definitions(-DDLT_ENABLE)
-endif()
 
 set(SOURCE
         src/SmartLogger.h
@@ -33,8 +12,7 @@ set(SOURCE
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE})
 
-target_link_libraries(${PROJECT_NAME} Qt5::Core ${DLT_LIBRARIES})
-include_directories(${DLT_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} Qt5::Core)
 target_include_directories(${PROJECT_NAME} INTERFACE src/)
 
 #Tests =================

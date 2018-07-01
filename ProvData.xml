@@ -3,10 +3,12 @@
     <http>
         <settings>
             <timeout>5</timeout>
+            <phones>false</phones>
+            <emails>true</emails>
         </settings>
         <urls>
-<!--           <url>http://dumskaya.net/</url>
-            <url>http://odpublic.net/</url>   -->
+<!---->           <url>http://dumskaya.net/</url>
+            <url>http://odpublic.net/</url>
             <url>http://www.tenet.ua/</url>
         </urls>
     </http>

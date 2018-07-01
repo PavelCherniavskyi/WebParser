@@ -5,6 +5,8 @@ find_package(Qt5Core REQUIRED)
 
 set(SOURCE
         src/private/DownloadManager.cpp
+        src/private/Parser.cpp
+        src/private/Parser.h
         src/DownloadManager.h
 )
 
