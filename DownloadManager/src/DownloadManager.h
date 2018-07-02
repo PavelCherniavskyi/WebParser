@@ -5,7 +5,7 @@
 #include <QSharedPointer>
 
 #include "../../Http/src/HttpTypes.h"
-#include "src/private/Parser.h"
+#include "../src/private/Parser.h"
 
 class Http;
 class ResponseHandler;

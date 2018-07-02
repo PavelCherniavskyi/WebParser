@@ -5,14 +5,14 @@
 #include <QVector>
 #include "../../../Http/src/HttpTypes.h"
 
-class IParser : QObject
+class IParser : public QObject
 {
 public:
 
 };
 
 
-class Parser : IParser
+class Parser : public IParser
 {
     Q_OBJECT
 public:
