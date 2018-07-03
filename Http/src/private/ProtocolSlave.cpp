@@ -3,7 +3,7 @@
 #include "ProtocolSlave.h"
 #include "../../../SmartLogger/src/SmartLogger.h"
 
-const uint32_t DEFAULT_OPERATION_TIMEOUT_MS = 30000;
+const uint32_t DEFAULT_OPERATION_TIMEOUT_MS = 10000;
 
 const QMap<CURLcode, QString> curlCodeToText = {
     {CURLE_OK,                       "CURLE_OK"                      },
@@ -127,6 +127,12 @@ ProtocolSlave::ProtocolSlave(const int32_t id)
 
     success &= (CURLE_OK == curl_easy_setopt(mEasyHandle, CURLOPT_TIMEOUT_MS, DEFAULT_OPERATION_TIMEOUT_MS));
 
+    success &= (CURLE_OK == curl_easy_setopt(mEasyHandle, CURLOPT_FOLLOWLOCATION, 1L));
+
+    success &= (CURLE_OK == curl_easy_setopt(mEasyHandle, CURLOPT_SSL_VERIFYHOST, 0L));
+
+    success &= (CURLE_OK == curl_easy_setopt(mEasyHandle, CURLOPT_SSL_VERIFYPEER, 0L));
+
     if (false == success) {
         WARN() << "[" << mId << "] Constructor: cannot init easy handle";
     }
@@ -198,7 +204,6 @@ bool ProtocolSlave::active() const
 
 void ProtocolSlave::setActive(bool active)
 {
-    INFO() << "active - " << (active ? "true" : "false");
     mActive = active;
 }
 

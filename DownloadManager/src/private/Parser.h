@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QMap>
 #include <QVector>
+#include <QRegularExpression>
 #include "../../../Http/src/HttpTypes.h"
 
 class IParser : public QObject
@@ -23,4 +24,11 @@ public:
     Q_ENUM(ParseType)
     Parser();
     void doParse(QVector<ResponseDataParams> params, QMap<ParseType, bool> parseTypes);
+    void parseLinks();
+
+signals:
+    void foundLink(QString url);
+
+private:
+    void execute(QString buffer, QRegularExpression reg, QStringList &out);
 };

@@ -39,6 +39,9 @@ public:
     void execute() override;
     void setResponseData(const ResponseDataParams value) override;
 
+public slots:
+    void gotExtraLink(QString url);
+
 private slots:
     void OnProvDataReceived(DownloadManager::ProvData provData);
 
@@ -49,4 +52,5 @@ private:
     QVector<ResponseDataParams>                 responseHandlers;
     ProvData                                    mProvData;
     Parser                                      parser;
+    QStringList                                 extraLinks;
 };

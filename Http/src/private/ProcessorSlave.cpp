@@ -30,7 +30,6 @@ uint32_t ProcessorSlave::id() const
 
 int64_t ProcessorSlave::timeout() const
 {
-    INFO();
     int64_t socketTimeoutMs = defaultLibcurlSocketTimeoutMs;
 
     if (CURLM_OK != curl_multi_timeout(mMh, &socketTimeoutMs)) {
@@ -43,7 +42,6 @@ int64_t ProcessorSlave::timeout() const
 
 void ProcessorSlave::descriptors(fd_set *fdread, fd_set *fdwrite, fd_set *fdexcep, int32_t *maxfd) const
 {
-    INFO();
     if (CURLM_OK != curl_multi_fdset(mMh, fdread, fdwrite, fdexcep, maxfd)) {
         WARN() << "[" << mId << "] Cannot get socket descriptors!";
     }
@@ -56,11 +54,10 @@ CURLM *ProcessorSlave::getMultiHandle()
 
 bool ProcessorSlave::add(ProtocolSlave *protocol)
 {
-    INFO();
     bool success = false;
 
     if (nullptr != protocol) {
-        INFO() << "Add protocol(" << protocol->id() << ")";
+        INFO() << "Add protocol[" << protocol->id() << "]";
         mProtocols.push_back(protocol);
         protocol->setActive(true);
 
@@ -104,7 +101,6 @@ bool ProcessorSlave::remove(ProtocolSlave *protocol)
 
 void ProcessorSlave::execute()
 {
-    INFO() << "mNowRunningProtocols before: " <<    mNowRunningProtocols;
     while (CURLM_CALL_MULTI_PERFORM == curl_multi_perform(mMh, &mNowRunningProtocols)) {
     }
     if (mNowRunningProtocols < mLastRunningProtocols) {
@@ -127,6 +123,4 @@ void ProcessorSlave::execute()
             }
         }
     }
-
-    INFO() << "mNowRunningProtocols after: " << mNowRunningProtocols;
 }

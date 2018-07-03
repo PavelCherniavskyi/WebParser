@@ -54,12 +54,22 @@ bool Provisioning::getProvisioning(QString path)
             return false;
         }
         downloadProvData.urls = urls;
-        provData.seek(0);
 
         QXmlQuery query;
-        query.setFocus(&provData);
-        query.setQuery("provdata/http/settings/timeout/text()");
         QString temp;
+
+        provData.seek(0);
+        query.setFocus(&provData);
+
+        query.setQuery("provdata/http/settings/phones/text()");
+        query.evaluateTo(&temp);
+        downloadProvData.parseTypes.insert(Parser::Phones, (temp.trimmed().toUpper() == "TRUE"));
+
+        query.setQuery("provdata/http/settings/emails/text()");
+        query.evaluateTo(&temp);
+        downloadProvData.parseTypes.insert(Parser::Emails, (temp.trimmed().toUpper() == "TRUE"));
+
+        query.setQuery("provdata/http/settings/timeout/text()");
         query.evaluateTo(&temp);
         downloadProvData.timeout = static_cast<quint16>(temp.toInt());
 
@@ -84,10 +94,6 @@ bool Provisioning::getProvisioning(QString path)
         query.setQuery("provdata/smartlogger/filePath/text()");
         query.evaluateTo(&smartProvData.logFilePath);
         smartProvData.logFilePath.remove(smartProvData.logFilePath.size() - 1, 1);
-
-        query.setQuery("provdata/smartlogger/dltenable/text()");
-        query.evaluateTo(&temp);
-        smartProvData.isDLTEnabled = (temp.trimmed().toUpper() == "TRUE");
 
         provData.close();
 

@@ -93,7 +93,6 @@ HttpError ProtocolMaster::getErrorFromLibcurl()
 
 void ProtocolMaster::jobExecuted()
 {
-    INFO() << mProtocolSlave.active();
     if (!mProtocolSlave.active()) {
         const HttpError error = getErrorFromLibcurl();
         const QByteArray data = mProtocolSlave.responseData();

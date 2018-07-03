@@ -27,14 +27,13 @@ bool ProcessorExecutor::isExecuting()
 bool ProcessorExecutor::executeProcessorSlaves()
 //--------------------------------------------------------------------------------------------------
 {
-    INFO() << "mProcessorMasters: " << mProcessorMasters.size();
     bool executing = false;
 
     if (!mProcessorMasters.empty()) {
 
         QSharedPointer<HttpJob> job(new HttpJob(mProcessorMasters[0]->slave()), &QObject::deleteLater);
         connect(job.data(), &HttpJob::jobExecuted, this, &ProcessorExecutor::handleJobExecuted);
-        mHttpJobExecutor->execute(job, true);
+        mHttpJobExecutor->execute(job, false);
 
         executing = true;
     }
@@ -85,7 +84,6 @@ void ProcessorExecutor::removeProcessorFromExecution(ProcessorMaster *processor)
 void ProcessorExecutor::handleJobExecuted()
 //--------------------------------------------------------------------------------------------------
 {
-    INFO() << mActive;
     if (mActive) {
         for (auto &processorMaster : mProcessorMasters) {
             processorMaster->jobExecuted();

@@ -70,7 +70,6 @@ void HttpJob::curlSelect()
         timeoutMs = std::min(timeoutMs, defaultTimeoutMs);
     }
 
-    INFO() << "maxFd: " << maxFd;
     if (timeoutMs) {
         if (-1 == maxFd) {
             // no file descriptors are set by libCurl, sleep for the select timeout
