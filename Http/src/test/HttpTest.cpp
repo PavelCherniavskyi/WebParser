@@ -52,7 +52,7 @@ void ProcessorExecutorMock::handleJobExecuted()
 }
 
 
-bool ProtocolMasterMock::sendRequest(const QString &url, uint32_t port)
+bool ProtocolMasterMock::sendRequest(const QString &url)
 {
     return  true;
 }
@@ -98,7 +98,9 @@ void HttpTest::protocolMasterTest()
     ProcessorMasterMock *processorMaster = new ProcessorMasterMock(this);
     connect(protocol, &ProtocolMaster::addProtocolToProcessing,     processorMaster, &ProcessorMasterMock::addProtocolToProcessing     );
     connect(protocol, &ProtocolMaster::removeProtocolFromProcessing,processorMaster, &ProcessorMasterMock::removeProtocolFromProcessing);
-    protocol->sendRequest("http://localhost/protocolmaster", 3000);
+    protocol->slave()->setPort(3000);
+    protocol->sendRequest("http://localhost/protocolmaster");
+
 
     QCOMPARE(processorMaster->getProtocolMasters().size(), 1);
 

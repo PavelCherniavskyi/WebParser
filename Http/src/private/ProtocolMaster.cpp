@@ -32,15 +32,15 @@ ProtocolSlave *ProtocolMaster::slave()
     return &mProtocolSlave;
 }
 
-bool ProtocolMaster::sendRequest(const QString &url, uint32_t port)
+bool ProtocolMaster::sendRequest(const QString &url)
 {
     bool success = false;
-
-    INFO() << "[" << mId << "] url: " << url << "port: " << port;
+    responseParams.url = url;
+    INFO() << "[" << mId << "] url: " << url;
 
     if (!mProtocolSlave.active()) {
         mProtocolSlave.setUrl(url);
-        mProtocolSlave.setPort(port);
+        //mProtocolSlave.setPort(port);
 
         emit addProtocolToProcessing(this);
         success = true;
@@ -94,11 +94,12 @@ HttpError ProtocolMaster::getErrorFromLibcurl()
 void ProtocolMaster::jobExecuted()
 {
     if (!mProtocolSlave.active()) {
-        const HttpError error = getErrorFromLibcurl();
-        const QByteArray data = mProtocolSlave.responseData();
-        const QStringList header = mProtocolSlave.responseHeader();
+        responseParams.id = mId;
+        responseParams.header = mProtocolSlave.responseHeader();
+        responseParams.data = mProtocolSlave.responseData();
+        responseParams.error = getErrorFromLibcurl();
 
-        mRequestSender->setResponseData(ResponseDataParams(mId, data, error, header));
+        mRequestSender->setResponseData(responseParams);
 
         emit removeProtocolFromProcessing(this);
     }

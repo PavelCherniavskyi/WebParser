@@ -36,38 +36,34 @@ void DownloadManager::setResponseData(const ResponseDataParams value)
 {
     INFO() << "Response data [" << value.id << "]: Bytes: " << value.data.size() << ". Error: " << HttpErrorToText[value.error];
     responseHandlers.push_back(value);
+    parser.doParse(value, mProvData.parseTypes);
 
-    bool flag = false;
-    for(size_t i = 0; i < extraLinks.size(); ++i) {
-        for(size_t j = 0; j < value.header.size(); ++j) {
-            if(value.header.at(j).contains(extraLinks.at(i))){
-                extraLinks.removeAt(i);
-                flag = true;
-                break;
-            }
-        }
-        if(flag){
-            break;
-        }
-    }
 
-    if(responseHandlers.size() >= mProvData.urls.size()) {
+    if(responseHandlers.size() == extraLinks.size()) {
         INFO() << "Execution complete. Got " << responseHandlers.size() << " responses.";
-        parser.doParse(responseHandlers, mProvData.parseTypes);
+        INFO() << "Phones:";
+        foreach (auto ph, parser.getPhones()) {
+            INFO() << ph;
+        }
+        INFO() << "Emails:";
+        foreach (auto em, parser.getEmails()) {
+            INFO() << em;
+        }
         emit doneExecution();
     }
-
-
 }
 
 void DownloadManager::gotExtraLink(QString url)
 {
-    m_http->sendRequest(this, url);
-    QRegularExpression reg("[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}");
-    QRegularExpressionMatch match = reg.match(url);
-    if (match.hasMatch()) {
-        extraLinks.append(match.captured(0));
+    foreach (auto hnld, responseHandlers) {
+        if(hnld.url.contains(url)){
+            INFO() << "Double url found: " << url;
+            return;
+        }
     }
+
+    extraLinks.append(url);
+    m_http->sendRequest(this, url);
 }
 
 void DownloadManager::OnProvDataReceived(DownloadManager::ProvData provData)

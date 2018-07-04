@@ -59,7 +59,7 @@ public:
       , mProtocolSlave(id)
     {
     }
-    bool sendRequest(const QString &url, uint32_t port = 80) override;
+    bool sendRequest(const QString &url) override;
     inline int32_t id() const override { return mId; }
     inline ProtocolSlave *slave() override { return &mProtocolSlave; }
 

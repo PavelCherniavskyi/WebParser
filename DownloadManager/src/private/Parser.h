@@ -23,12 +23,17 @@ public:
     };
     Q_ENUM(ParseType)
     Parser();
-    void doParse(QVector<ResponseDataParams> params, QMap<ParseType, bool> parseTypes);
-    void parseLinks();
+    void doParse(ResponseDataParams param, QMap<ParseType, bool> parseTypes);
+    void parseLinks(ResponseDataParams param);
+    inline QStringList getPhones() { return phones; }
+    inline QStringList getEmails() { return emails; }
 
 signals:
     void foundLink(QString url);
 
 private:
     void execute(QString buffer, QRegularExpression reg, QStringList &out);
+
+    QStringList phones;
+    QStringList emails;
 };
