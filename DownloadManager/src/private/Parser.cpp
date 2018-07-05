@@ -30,15 +30,15 @@ void Parser::parseLinks(ResponseDataParams param)
     param.url.contains(QRegularExpression("[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}"), &matchUrl);
     QString urlClear = matchUrl.captured(0) + '/';
 
-    QRegularExpression reg("[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}/[A-Za-z0-9.-]+");
+    QString pattern = "href=/([A-Za-z0-9-]+/){1,}\\s";
+    QRegularExpression reg(pattern);
     QRegularExpressionMatchIterator iter = reg.globalMatch(QString(param.data.toStdString().c_str()));
     while (iter.hasNext()) {
         QRegularExpressionMatch match = iter.next();
         if (match.hasMatch()) {
-            if(match.captured(0).contains(urlClear)){
-                INFO() << "Found link: " << urlPrefix + match.captured(0);
-                emit foundLink(urlPrefix + match.captured(0));
-            }
+            match.captured(0).contains(QRegularExpression("([A-Za-z0-9-]+/){1,}\\s"), &matchUrl);
+            INFO() << "Found link: " << urlPrefix + urlClear + matchUrl.captured(0);
+            emit foundLink(urlPrefix + urlClear + matchUrl.captured(0));
         }
     }
 }

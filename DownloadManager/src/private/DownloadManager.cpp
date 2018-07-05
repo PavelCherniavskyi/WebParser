@@ -39,8 +39,12 @@ void DownloadManager::setResponseData(const ResponseDataParams value)
     parser.doParse(value, mProvData.parseTypes);
 
 
-    if(responseHandlers.size() == extraLinks.size()) {
+    if(responseHandlers.size() == extraLinks.size() + mProvData.urls.size()) {
         INFO() << "Execution complete. Got " << responseHandlers.size() << " responses.";
+        INFO() << "Urls:";
+        foreach (auto url, responseHandlers) {
+            INFO() << url.url;
+        }
         INFO() << "Phones:";
         foreach (auto ph, parser.getPhones()) {
             INFO() << ph;
@@ -55,9 +59,9 @@ void DownloadManager::setResponseData(const ResponseDataParams value)
 
 void DownloadManager::gotExtraLink(QString url)
 {
-    foreach (auto hnld, responseHandlers) {
-        if(hnld.url.contains(url)){
-            INFO() << "Double url found: " << url;
+    foreach (auto hnld, extraLinks) {
+        if(hnld.contains(url)){
+            INFO() << "Double url found: " << url << " in " << hnld;
             return;
         }
     }
