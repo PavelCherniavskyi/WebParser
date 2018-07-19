@@ -1,5 +1,6 @@
 #include "SmartLoggerTest.h"
 #include "../SmartLogger.h"
+#include <QTemporaryFile>
 
 const QString infoStr("Info test string.");
 const QString warnStr("Warn test string.");
@@ -47,12 +48,12 @@ void SmartLoggerTest::logToFileTest()
 void SmartLoggerTest::logToStdOutTest()
 {
     SmartLogger::ProvData provData;
-    QFile fileOut("test_file.txt");
+    QTemporaryFile fileOut;
     provData.logWay = SmartLogger::LOGWAY::LogToStdOut;
     SmartLogger::OnProvDataReceived(provData);
 
 
-    QVERIFY(fileOut.open(QIODevice::ReadWrite | QIODevice::Truncate));
+    QVERIFY(fileOut.open());
 
     int hdl = fileOut.handle();
     int saved_stdout = dup(1);
