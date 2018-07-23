@@ -48,14 +48,15 @@ void SmartLoggerTest::logToFileTest()
 void SmartLoggerTest::logToStdOutTest()
 {
     SmartLogger::ProvData provData;
-    QTemporaryFile fileOut;
+    int filepipes[2];
+    char buffer[BUFSIZ + 1];
     provData.logWay = SmartLogger::LOGWAY::LogToStdOut;
     SmartLogger::OnProvDataReceived(provData);
 
+    INFO() << "Start test";
+    QVERIFY(pipe(filepipes) == 0);
 
-    QVERIFY(fileOut.open());
-
-    int hdl = fileOut.handle();
+    int hdl = filepipes[1];
     int saved_stdout = dup(1);
     dup2(hdl, 1);
 
@@ -63,24 +64,19 @@ void SmartLoggerTest::logToStdOutTest()
     WARN() << warnStr;
     ERROR() << errorStr;
 
-    fileOut.seek(0);
-
-    int result = 3;
-    QTextStream stream(&fileOut);
-    QString line = stream.readLine();
-    while (!line.isNull()) {
-       if(line.contains(infoStr))
-           --result;
-       else if(line.contains(warnStr))
-           --result;
-       else if(line.contains(errorStr))
-           --result;
-       line = stream.readLine();
-    }
-
     dup2(saved_stdout, 1);
     close(saved_stdout);
-    fileOut.close();
+
+    int result = 3;
+    read(filepipes[0], buffer, BUFSIZ);
+    INFO() << "End test";
+    QString line(buffer);
+    if(line.contains(infoStr))
+        --result;
+    if(line.contains(warnStr))
+        --result;
+    if(line.contains(errorStr))
+        --result;
 
     QCOMPARE(result, 0);
 }
