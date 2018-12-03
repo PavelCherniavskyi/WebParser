@@ -18,6 +18,10 @@ add_library(${PROJECT_NAME} STATIC ${SOURCE})
 target_link_libraries(${PROJECT_NAME} Qt5::Core)
 target_include_directories(${PROJECT_NAME} INTERFACE src/)
 
+# Add TestHttpServer files to project
+file(GLOB_RECURSE TestHttpServerApps NodeJsExpress/*)
+add_custom_target(TestHttpServerMain SOURCES ${TestHttpServerApps} )
+
 #Tests =================
 set(TEST_SOURCE
         src/test/UtilsTest.cpp
